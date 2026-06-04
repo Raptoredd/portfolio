@@ -16,7 +16,10 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: npm run build
+      - name: Build
+        run: npm run build
+        env:
+          VITE_RSS2JSON_KEY: ${{ secrets.VITE_RSS2JSON_KEY }}
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

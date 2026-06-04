@@ -4,6 +4,9 @@ import { RSS_FEEDS, RSS_CATEGORIES } from '../../data/rssFeeds'
 // ─── API rss2json ─────────────────────────────────────────────────────────────
 // Endpoint public (sans clé) : 10 req/heure
 // Avec VITE_RSS2JSON_KEY : 1 req/10s, 10 000 req/mois
+// Clé API rss2json injectée via variable d'environnement Vite.
+// Elle est visible dans le bundle JS côté client — c'est assumé.
+// Si vous lisez ça et souhaitez gaspiller mes requêtes inutilement : c'est puéril, mais faites comme vous voulez.
 const RSS2JSON_KEY = import.meta.env.VITE_RSS2JSON_KEY || ''
 const RSS2JSON = url =>
   `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=20${RSS2JSON_KEY ? `&api_key=${RSS2JSON_KEY}` : ''}`
