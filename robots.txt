@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /old/
+Disallow: /api/files
+# Nothing to see here.

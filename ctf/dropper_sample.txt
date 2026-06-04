@@ -1,0 +1,3 @@
+Asset CTF à venir — Dropper Anatomy (CTI-2)
+Remplacer ce fichier par : dropper_sample.py
+Le script doit contenir la partie 1 encodée en base64 : RkxBR3tkcjBwcDNyXw==
