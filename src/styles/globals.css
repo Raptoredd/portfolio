@@ -1,0 +1,241 @@
+/* ─── TAILWIND ────────────────────────────────────────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── THEMES ─────────────────────────────────────────────── */
+:root, .theme-purple {
+  --bg-primary:    #0a0a0f;
+  --bg-secondary:  #10101a;
+  --bg-surface:    #16162a;
+  --accent:        #9b59f5;
+  --accent-dim:    #6a35c2;
+  --accent-glow:   rgba(155, 89, 245, 0.25);
+  --text-primary:  #e8e8f0;
+  --text-secondary:#8888aa;
+  --text-muted:    #44445a;
+  --border:        #2a2a42;
+  --border-accent: #9b59f5;
+  --red-team:      #f54b4b;
+  --blue-team:     #4b9ef5;
+}
+
+.theme-green {
+  --bg-primary:    #050f05;
+  --bg-secondary:  #0a160a;
+  --bg-surface:    #0f1f0f;
+  --accent:        #00ff41;
+  --accent-dim:    #00bb30;
+  --accent-glow:   rgba(0, 255, 65, 0.2);
+  --text-primary:  #d0ffd0;
+  --text-secondary:#66aa66;
+  --text-muted:    #2a4a2a;
+  --border:        #1a3a1a;
+  --border-accent: #00ff41;
+  --red-team:      #ff4444;
+  --blue-team:     #44aaff;
+}
+
+.theme-red {
+  --bg-primary:    #0f0505;
+  --bg-secondary:  #1a0808;
+  --bg-surface:    #200c0c;
+  --accent:        #ff2b2b;
+  --accent-dim:    #bb1a1a;
+  --accent-glow:   rgba(255, 43, 43, 0.2);
+  --text-primary:  #ffd0d0;
+  --text-secondary:#aa5555;
+  --text-muted:    #4a2020;
+  --border:        #3a1010;
+  --border-accent: #ff2b2b;
+  --red-team:      #ff2b2b;
+  --blue-team:     #4b9ef5;
+}
+
+.theme-cyan {
+  --bg-primary:    #030d12;
+  --bg-secondary:  #071820;
+  --bg-surface:    #0c2230;
+  --accent:        #00e5ff;
+  --accent-dim:    #009eb5;
+  --accent-glow:   rgba(0, 229, 255, 0.2);
+  --text-primary:  #d0f8ff;
+  --text-secondary:#558899;
+  --text-muted:    #1a3a44;
+  --border:        #0f3040;
+  --border-accent: #00e5ff;
+  --red-team:      #ff4b4b;
+  --blue-team:     #00e5ff;
+}
+
+/* ─── RESET & BASE ───────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'IBM Plex Mono', monospace;
+  min-height: 100vh;
+  cursor: crosshair;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Custom cursor override for interactive elements */
+a, button, [role="button"], select, input, textarea {
+  cursor: crosshair;
+}
+
+/* ─── GRAIN OVERLAY ──────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* ─── SCANLINES OVERLAY ──────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  pointer-events: none;
+  opacity: 0.025;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.4) 2px,
+    rgba(0, 0, 0, 0.4) 4px
+  );
+}
+
+/* ─── TYPOGRAPHY ─────────────────────────────────────────── */
+h1, h2 {
+  font-family: 'Orbitron', monospace;
+  letter-spacing: 0.05em;
+}
+
+h3, h4 {
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 0.04em;
+}
+
+.ui-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-dim);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ─── UTILITY CLASSES ────────────────────────────────────── */
+.accent-glow {
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.border-surface {
+  border: 1px solid var(--border);
+}
+
+.border-accent {
+  border: 1px solid var(--border-accent);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.bg-surface {
+  background-color: var(--bg-surface);
+}
+
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+/* ─── GLITCH EFFECT ──────────────────────────────────────── */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.glitch::before {
+  color: var(--accent);
+  clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+  animation: glitch-before 3s infinite linear;
+}
+
+.glitch::after {
+  color: var(--red-team);
+  clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
+  animation: glitch-after 3s infinite linear;
+  animation-delay: 0.1s;
+}
+
+.glitch-subtle::before { animation-duration: 6s; opacity: 0.6; }
+.glitch-medium::before { animation-duration: 3s; opacity: 0.8; }
+.glitch-intense::before { animation-duration: 1.5s; opacity: 1; }
+
+.glitch-subtle::after { animation-duration: 6s; opacity: 0.5; }
+.glitch-medium::after { animation-duration: 3s; opacity: 0.7; }
+.glitch-intense::after { animation-duration: 1.5s; opacity: 0.9; }
+
+/* ─── SELECTION ──────────────────────────────────────────── */
+::selection {
+  background: var(--accent-glow);
+  color: var(--text-primary);
+}
+
+/* ─── FOCUS ──────────────────────────────────────────────── */
+input:focus, textarea:focus, select:focus {
+  border-color: var(--border-accent) !important;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes pulse-border {
+  0%, 100% { box-shadow: 0 0 6px var(--accent-glow);  border-color: var(--accent); }
+  50%       { box-shadow: 0 0 20px var(--accent-glow); border-color: var(--border-accent); }
+}
+
+@keyframes breathe-glow {
+  0%,  100% { box-shadow: 0 0 6px  var(--accent-glow); }
+  50%        { box-shadow: 0 0 22px var(--accent-glow), 0 0 40px var(--accent-glow); }
+}

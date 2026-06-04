@@ -1,0 +1,70 @@
+/* ─── PAGE TRANSITIONS ───────────────────────────────────── */
+@keyframes glitch-in {
+  0%   { transform: translateX(-4px) skewX(-1deg); opacity: 0;   filter: hue-rotate(90deg); }
+  20%  { transform: translateX(4px)  skewX(1deg);  opacity: 0.6; }
+  40%  { transform: translateX(-2px);               opacity: 0.8; filter: hue-rotate(0deg); }
+  60%  { transform: translateX(2px);                opacity: 1; }
+  100% { transform: translateX(0)    skewX(0deg);   opacity: 1; }
+}
+
+/* ─── GLITCH TEXT ────────────────────────────────────────── */
+@keyframes glitch-before {
+  0%    { transform: translateX(0); }
+  2%    { transform: translateX(-3px); }
+  4%    { transform: translateX(3px); }
+  6%    { transform: translateX(0); }
+  96%   { transform: translateX(0); }
+  98%   { transform: translateX(2px); }
+  100%  { transform: translateX(0); }
+}
+
+@keyframes glitch-after {
+  0%    { transform: translateX(0); }
+  2%    { transform: translateX(3px); }
+  4%    { transform: translateX(-3px); }
+  6%    { transform: translateX(0); }
+  97%   { transform: translateX(0); }
+  99%   { transform: translateX(-2px); }
+  100%  { transform: translateX(0); }
+}
+
+/* ─── CURSOR BLINK ───────────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ─── PULSE ACCENT ───────────────────────────────────────── */
+@keyframes pulse-accent {
+  0%, 100% { box-shadow: 0 0 4px var(--accent-glow); }
+  50%       { box-shadow: 0 0 16px var(--accent-glow), 0 0 32px var(--accent-glow); }
+}
+
+/* ─── FLOW EDGE DASH ─────────────────────────────────────── */
+@keyframes dash-flow {
+  to { stroke-dashoffset: -20; }
+}
+
+/* ─── SVG DRAW ───────────────────────────────────────────── */
+@keyframes svg-draw {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* ─── SCROLL BOUNCE ──────────────────────────────────────── */
+@keyframes bounce-down {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%       { transform: translateY(8px); opacity: 1; }
+}
+
+/* ─── FLOAT ──────────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+/* ─── FADE SLIDE UP ──────────────────────────────────────── */
+@keyframes fade-slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
