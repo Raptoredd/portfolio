@@ -56,14 +56,12 @@ function HashArtifact({ artifact }) {
 
 // C3 — Headers terminal (pentest-2)
 const DEBUG_HEADERS = [
-  { text: 'HTTP/1.1 200 OK',                                         flag: false },
-  { text: 'Content-Type: application/json; charset=utf-8',           flag: false },
-  { text: 'Server: nginx/1.18.0 (Ubuntu)',                           flag: false },
-  { text: 'Cache-Control: no-store, no-cache',                       flag: false },
-  { text: 'X-Powered-By: InternalAPI/2.3',                          flag: false },
-  { text: 'X-Request-Id: f3a1b2c4-dead-beef-0000-cafebabe1234',      flag: false },
-  { text: 'X-Debug-Flag: FLAG{h34d3rs_4r3_s1l3nt_w1tn3ss3s}',       flag: true  },
-  { text: 'X-Build-Version: dev-20240312-unstaged',                  flag: false },
+  { text: 'HTTP/1.1 200 OK',                                           flag: false },
+  { text: 'Content-Type: application/json',                            flag: false },
+  { text: 'X-Powered-By: VertexCore/2.3',                             flag: false },
+  { text: 'Cache-Control: no-store',                                   flag: false },
+  { text: 'X-Request-ID: a3f9c2e1',                                   flag: false },
+  { text: 'X-Debug-Flag: FLAG{h34d3rs_4r3_s1l3nt_w1tn3ss3s}',        flag: true  },
 ]
 
 function HeadersTerminal() {
@@ -138,21 +136,21 @@ function HeadersTerminal() {
         </div>
       </div>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <button
-          onClick={() => setStep('response')}
-          disabled={step !== 'idle'}
-          style={{
-            background: 'none',
-            border: `1px solid ${step === 'idle' ? 'var(--border-accent)' : 'var(--border)'}`,
-            borderRadius: 3, padding: '4px 12px',
-            color: step === 'idle' ? 'var(--accent)' : 'var(--text-muted)',
-            fontFamily: 'Rajdhani, sans-serif', fontWeight: 600, fontSize: 11,
-            cursor: step === 'idle' ? 'pointer' : 'default',
-            letterSpacing: '.06em',
-          }}
-        >
-          ENVOYER LA REQUÊTE
-        </button>
+        {step === 'idle' && (
+          <button
+            onClick={() => setStep('response')}
+            style={{
+              background: 'none',
+              border: '1px solid var(--border-accent)',
+              borderRadius: 3, padding: '4px 12px',
+              color: 'var(--accent)',
+              fontFamily: 'Rajdhani, sans-serif', fontWeight: 600, fontSize: 11,
+              cursor: 'pointer', letterSpacing: '.06em',
+            }}
+          >
+            ENVOYER LA REQUÊTE
+          </button>
+        )}
         {step === 'response' && (
           <button
             onClick={() => setStep('headers')}
