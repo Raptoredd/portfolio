@@ -11,15 +11,17 @@
       rel="stylesheet"
     />
     <script>
-      (function() {
-        var redirect = sessionStorage.getItem('redirect');
-        if (redirect) {
-          sessionStorage.removeItem('redirect');
-          if (redirect !== window.location.pathname) {
-            window.history.replaceState(null, null, redirect);
-          }
+      (function(l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function(s) {
+            return s.replace(/~and~/g, '&');
+          });
+          window.history.replaceState(
+            null, null,
+            decoded[0] + (decoded[1] ? '?' + decoded[1] : '') + l.hash
+          );
         }
-      })();
+      }(window.location));
     </script>
   </head>
   <body>
