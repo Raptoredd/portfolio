@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>benjaminbayle.tech</title>
+    <script>
+      // GitHub Pages SPA redirect — conserve le chemin pour React Router
+      var path = window.location.pathname;
+      var search = window.location.search;
+      var hash = window.location.hash;
+      sessionStorage.setItem('redirect', path + search + hash);
+      window.location.replace('/');
+    </script>
+  </head>
+  <body></body>
+</html>
