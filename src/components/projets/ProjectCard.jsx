@@ -65,7 +65,7 @@ export default function ProjectCard({ project }) {
               color: project.status === 'completed' ? '#00ff41' : '#ffc800',
             }}
           >
-            {project.status === 'completed' ? 'COMPLETED' : 'WIP'}
+            {project.status === 'completed' ? 'TERMINÉ' : 'EN COURS'}
           </span>
           <span style={{ fontFamily: 'Share Tech Mono, monospace', fontSize: '0.68rem', color: 'var(--text-muted)' }}>
             {project.year}

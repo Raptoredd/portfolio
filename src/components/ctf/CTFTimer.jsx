@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { useCTFProgress } from '../../hooks/useCTFProgress'
 
+const timerKey = (id) => `ctf_timer_start_${id}`
+
 function fmt(ms) {
   const total = Math.floor(ms / 10)
   const cc    = total % 100
@@ -31,6 +33,18 @@ export default function CTFTimer({ challengeId, onStart }) {
     rafRef.current = requestAnimationFrame(tick)
   }, [])
 
+  // Resume timer from localStorage on mount (persists across page reloads)
+  useEffect(() => {
+    if (solved) return
+    const stored = localStorage.getItem(timerKey(challengeId))
+    if (stored) {
+      const startTime = parseInt(stored, 10)
+      startRef.current = startTime
+      setRunning(true)
+      onStart?.(startTime)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (running) {
       rafRef.current = requestAnimationFrame(tick)
@@ -41,11 +55,15 @@ export default function CTFTimer({ challengeId, onStart }) {
   }, [running, tick])
 
   useEffect(() => {
-    if (solved && running) setRunning(false)
-  }, [solved])
+    if (solved) {
+      if (running) setRunning(false)
+      localStorage.removeItem(timerKey(challengeId))
+    }
+  }, [solved]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleStart = () => {
     const now = Date.now()
+    localStorage.setItem(timerKey(challengeId), now)
     startRef.current = now
     setRunning(true)
     onStart?.(now)

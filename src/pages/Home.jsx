@@ -233,7 +233,7 @@ export default function Home() {
                 letterSpacing: '0.08em',
               }}
             >
-              CYBERSECURITY STUDENT &nbsp;—&nbsp; BLUE &amp; RED TEAM
+              Étudiant en Cybersécurité
             </motion.p>
           )}
 
@@ -403,7 +403,7 @@ export default function Home() {
             <div className="flex flex-col gap-4">
               {[
                 { label: 'FORMATION',      value: 'Bachelor R&S — Guardia CS'    },
-                { label: 'ORIENTATION',    value: 'Blue Team / Red Team'          },
+                { label: 'DISCIPLINES',    value: 'Attaque & Défense'              },
                 { label: 'ALTERNANCE',     value: 'Malakoff Humanis — IT Support' },
                 { label: 'DISPONIBILITÉ',  value: '2026 (fin de formation)'       },
               ].map(item => (

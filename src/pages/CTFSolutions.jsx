@@ -122,10 +122,10 @@ export default function CTFSolutions() {
       }}>
         <Lock size={36} style={{ color: 'var(--text-muted)' }} />
         <p style={{ fontFamily: 'Share Tech Mono, monospace', fontSize: '1rem', color: 'var(--text-primary)', textAlign: 'center' }}>
-          Pas de bras, pas de chocolat.
+          No Pain, No Gain
         </p>
         <p style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.82rem', color: 'var(--text-muted)', textAlign: 'center', maxWidth: 400 }}>
-          Résous au moins un challenge pour débloquer les solutions.
+          Vous n'avez pas encore validé au moins un challenge. Résolvez-en d'abord pour accéder aux solutions.
         </p>
         <Link
           to="/ctf"
@@ -170,7 +170,7 @@ export default function CTFSolutions() {
         </div>
 
         {CTF_CATEGORIES.map(cat => {
-          const challenges = CTF_CHALLENGES.filter(c => c.category === cat.id)
+          const challenges = CTF_CHALLENGES.filter(c => c.category === cat.id && c.difficulty !== 'wip')
           return (
             <section key={cat.id} style={{ marginBottom: '2.5rem' }}>
               <h2 style={{

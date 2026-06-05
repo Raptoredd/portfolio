@@ -81,58 +81,39 @@ export const CTF_CHALLENGES = [
   {
     id: 'pentest-2',
     category: 'pentest',
-    title: 'Traversal to the Truth',
+    title: "Headers Don't Lie",
     difficulty: 'medium',
     description:
-      'Une API expose un paramètre ?file=. ' +
-      "Le développeur a fait confiance aux inputs utilisateur. " +
-      "Erreur classique. Remonter l'arborescence pour trouver ce qui ne devrait pas être là.",
-    tags: ['path traversal', 'LFI', 'énumération'],
+      'Un endpoint interne expose des informations dans ses headers HTTP. ' +
+      'Le développeur a oublié de les nettoyer avant la mise en production. ' +
+      'Les outils parlent, encore faut-il savoir écouter.',
+    tags: ['HTTP headers', 'DevTools', 'curl'],
     artifact: {
-      type: 'url',
-      value: '?file=index.html',
-      label: 'Endpoint vulnérable — essaie de modifier le paramètre file=',
+      type: 'headers',
+      label: 'Endpoint — GET /api/status',
     },
-    // SHA-256 de FLAG{p4th_tr4v3rs4l_cl13nt_s1d3} — NE PAS MODIFIER
-    flagHash: '3e8460d85c1eb4095eeb79c59ead6e514e205d3e1d729b04add9ba70e17500b9',
+    // SHA-256 de FLAG{h34d3rs_4r3_s1l3nt_w1tn3ss3s} — NE PAS MODIFIER
+    flagHash: '8a4546d13cc4fa46d83ed878b02db908bb571acfbffb252deaf85618417e5f05',
     hint: {
-      icon: 'FolderOpen',
-      text: 'Path Traversal — PortSwigger',
-      url: 'https://portswigger.net/web-security/file-path-traversal',
+      icon: 'Globe',
+      text: 'HTTP Headers — MDN',
+      url: 'https://developer.mozilla.org/fr/docs/Web/HTTP/Headers',
       tooltip:
-        "Essaie des payloads comme ../../../../etc/flag.txt ou des variantes URL-encodées (%2F). " +
-        "Burp Suite Intruder ou ffuf peuvent automatiser l'énumération.",
-    },
-    apiConfig: {
-      decoyResponses: {
-        'index.html': '<!DOCTYPE html><html><!-- vertex-studio internal --></html>',
-        'about.txt':  'Vertex Studio — Internal file server v1.2.0',
-        'config.txt': '[ERROR] Access denied — insufficient privileges',
-        'readme.md':  '# Internal docs\nClassified. Contact sysadmin.',
-      },
-      acceptedPayloads: [
-        '../../../../etc/flag.txt',
-        '../../../flag',
-        '..%2F..%2F..%2F..%2Fetc%2Fflag.txt',
-        '....//....//....//....//etc/flag.txt',
-        '../../../../etc/flag',
-        '%2e%2e%2f%2e%2e%2f%2e%2e%2fflag.txt',
-      ],
-      flagPlaintext: 'FLAG{p4th_tr4v3rs4l_cl13nt_s1d3}',
-      successMessage: '[200 OK] /etc/flag.txt\nContenu : FLAG{p4th_tr4v3rs4l_cl13nt_s1d3}',
-      defaultError:   '[404 Not Found] Fichier introuvable.',
+        "Les headers HTTP contiennent parfois plus que ce qu'on croit. " +
+        "curl -I ou les DevTools Network sont tes meilleurs alliés. " +
+        "Cherche un header inhabituel dans la réponse de /api/status.",
     },
     solution: {
-      flag: 'FLAG{p4th_tr4v3rs4l_cl13nt_s1d3}',
+      flag: 'FLAG{h34d3rs_4r3_s1l3nt_w1tn3ss3s}',
       steps: [
-        "Observer l'endpoint exposé dans la card : ?file=index.html",
-        'Tester un payload de traversal : ../../../../etc/flag.txt',
-        'La "réponse API" retourne le contenu du fichier flag',
-        'Le flag apparaît dans la console de la card',
-        'Soumettre : FLAG{p4th_tr4v3rs4l_cl13nt_s1d3}',
+        "Cliquer sur 'ENVOYER LA REQUÊTE' dans la card pour simuler GET /api/status",
+        "Cliquer ensuite sur 'VOIR LES HEADERS BRUTS'",
+        "Repérer le header non-standard : X-Debug-Flag",
+        "La valeur du header contient le flag",
+        "Soumettre : FLAG{h34d3rs_4r3_s1l3nt_w1tn3ss3s}",
       ],
-      tools: ['Burp Suite', 'ffuf', 'navigateur (URL manuel)', 'curl'],
-      notes: 'Variantes à essayer : encodage URL (%2F), double encodage, null bytes.',
+      tools: ['curl -I', 'DevTools Network', 'Burp Suite'],
+      notes: "Les headers de debug oubliés en production sont une source fréquente de fuite d'information (CWE-200).",
     },
   },
 
@@ -208,9 +189,9 @@ export const CTF_CHALLENGES = [
     title: 'Who Am I?',
     difficulty: 'easy',
     description:
-      "Une photo a été prise lors d'une réunion Vertex Studio. " +
-      'Elle a été uploadée sans précaution. ' +
-      'Les appareils photo modernes sont bavards — parfois trop.',
+      'Une photo anodine prise dans le jardin du Directeur Général de Vertex Studio. ' +
+      'Une simple boîte d\'allumettes dans l\'herbe. ' +
+      'Mais les métadonnées, elles, ne mentent jamais.',
     tags: ['EXIF', 'metadata', 'exiftool'],
     artifact: {
       type: 'image',
@@ -376,7 +357,7 @@ export const CTF_CHALLENGES = [
     id: 'cti-2',
     category: 'cti',
     title: 'Dropper Anatomy',
-    difficulty: 'medium',
+    difficulty: 'hard',
     description:
       'Un script Python suspect a été intercepté sur un poste Vertex Studio. ' +
       'Obfusqué, avec des appels LOLbin et une tentative de récupération ' +
@@ -427,41 +408,13 @@ export const CTF_CHALLENGES = [
     id: 'cti-3',
     category: 'cti',
     title: 'IOC Hunt',
-    difficulty: 'hard',
-    description:
-      "Un rapport d'incident a été produit suite à une compromission simulée chez Vertex Studio. " +
-      'Il contient des IOC. Certains mènent à un acteur documenté. ' +
-      'Identifie le groupe — son nom est le flag.',
-    tags: ['threat intelligence', 'IOC', 'VirusTotal', 'pivoting', 'MITRE ATT&CK'],
+    difficulty: 'wip',
+    description: '',
+    tags: [],
     artifact: {
-      type: 'download',
-      src: '/ctf/incident_report_v1.pdf',
-      label: 'Télécharger incident_report_v1.pdf',
-      warning: '⚠️ IOC fictifs — usage éducatif uniquement',
-    },
-    // SHA-256 de FLAG{APT-VERTEX-GHOST} — NE PAS MODIFIER (PROVISOIRE)
-    flagHash: '14e76654938d85651aabe7171971b6b052c0ef5f7917a707eddefa2f1fa5079c',
-    hint: {
-      icon: 'Globe',
-      text: 'Plateformes de pivot IOC',
-      url: 'https://www.virustotal.com',
-      tooltip:
-        'Outils pour le pivot : VirusTotal (hash/IP/domaine), Shodan (infra), ' +
-        'URLScan.io (domaines), AbuseIPDB (IP), MITRE ATT&CK (TTP → acteur). ' +
-        'Commence par les hashes, pivote vers les domaines C2.',
-    },
-    solution: {
-      flag: 'FLAG{APT-VERTEX-GHOST}',
-      steps: [
-        '⚠️ Ce challenge est en cours de préparation — solution à compléter',
-        'Télécharger et lire incident_report_v1.pdf',
-        'Extraire les IOC : hashes, IP, domaines',
-        'Pivoter sur VirusTotal — identifier les tags acteur',
-        'Croiser avec MITRE ATT&CK — identifier le groupe',
-        'Soumettre : FLAG{APT-VERTEX-GHOST}',
-      ],
-      tools: ['VirusTotal', 'Shodan', 'URLScan.io', 'MITRE ATT&CK', 'AbuseIPDB'],
-      notes: 'Challenge en cours de préparation — IOC et rapport PDF à finaliser.',
+      type: 'text',
+      value: 'Le scénario et les artefacts de ce challenge sont en cours de rédaction.',
+      label: 'STATUT',
     },
   },
 ];

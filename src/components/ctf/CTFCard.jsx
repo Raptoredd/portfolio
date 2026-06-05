@@ -6,9 +6,10 @@ import CTFFlagInput from './CTFFlagInput'
 import CTFHintBadge from './CTFHintBadge'
 
 const DIFFICULTY = {
-  easy:   { label: 'EASY',   bg: 'rgba(34,197,94,0.12)',  color: '#22c55e' },
-  medium: { label: 'MEDIUM', bg: 'rgba(245,158,11,0.12)', color: '#f59e0b' },
-  hard:   { label: 'HARD',   bg: 'rgba(245,75,75,0.12)',  color: '#f54b4b' },
+  easy:   { label: 'EASY',              bg: 'rgba(34,197,94,0.12)',   color: '#22c55e' },
+  medium: { label: 'MEDIUM',            bg: 'rgba(245,158,11,0.12)',  color: '#f59e0b' },
+  hard:   { label: 'HARD',             bg: 'rgba(245,75,75,0.12)',   color: '#f54b4b' },
+  wip:    { label: 'Création en cours', bg: 'rgba(107,114,128,0.10)', color: '#6b7280' },
 }
 
 // ── Artifact renderers ───────────────────────────────────
@@ -53,50 +54,20 @@ function HashArtifact({ artifact }) {
   )
 }
 
-// C3 — Terminal interactif (pentest-2)
-function TerminalConsole({ apiConfig }) {
-  const [termInput, setTermInput] = useState('')
-  const [history, setHistory] = useState([
-    { cmd: 'GET /api/files?file=index.html', resp: '[200 OK] <!DOCTYPE html><html><!-- vertex-studio internal --></html>' },
-    { cmd: 'GET /api/files?file=about.txt',  resp: '[200 OK] Vertex Studio — Internal file server v1.2.0' },
-    { cmd: 'GET /api/files?file=config.txt', resp: '[403] Access denied — insufficient privileges.' },
-  ])
-  const histRef = useRef(null)
+// C3 — Headers terminal (pentest-2)
+const DEBUG_HEADERS = [
+  { text: 'HTTP/1.1 200 OK',                                         flag: false },
+  { text: 'Content-Type: application/json; charset=utf-8',           flag: false },
+  { text: 'Server: nginx/1.18.0 (Ubuntu)',                           flag: false },
+  { text: 'Cache-Control: no-store, no-cache',                       flag: false },
+  { text: 'X-Powered-By: InternalAPI/2.3',                          flag: false },
+  { text: 'X-Request-Id: f3a1b2c4-dead-beef-0000-cafebabe1234',      flag: false },
+  { text: 'X-Debug-Flag: FLAG{h34d3rs_4r3_s1l3nt_w1tn3ss3s}',       flag: true  },
+  { text: 'X-Build-Version: dev-20240312-unstaged',                  flag: false },
+]
 
-  useEffect(() => {
-    if (histRef.current) histRef.current.scrollTop = histRef.current.scrollHeight
-  }, [history])
-
-  const getRespColor = (resp) => {
-    if (resp.includes('FLAG{')) return '#22c55e'
-    if (resp.startsWith('[200')) return '#22c55e'
-    if (resp.startsWith('[403') || resp.startsWith('[ERROR')) return '#f59e0b'
-    return 'var(--text-muted)'
-  }
-
-  const handleSend = () => {
-    if (!termInput.trim()) return
-    let fileParam = termInput.trim()
-    const match = fileParam.match(/[?&]file=(.+)/)
-    if (match) fileParam = match[1]
-
-    const isTraversal = apiConfig.acceptedPayloads.some(
-      p => fileParam === p || decodeURIComponent(fileParam) === decodeURIComponent(p)
-    )
-    const decoy = apiConfig.decoyResponses[fileParam]
-
-    let resp
-    if (isTraversal) {
-      resp = apiConfig.successMessage
-    } else if (decoy) {
-      resp = decoy.startsWith('[') ? decoy : `[200 OK] ${decoy}`
-    } else {
-      resp = apiConfig.defaultError
-    }
-
-    setHistory(h => [...h, { cmd: `GET /api/files?file=${fileParam}`, resp }])
-    setTermInput('')
-  }
+function HeadersTerminal() {
+  const [step, setStep] = useState('idle') // 'idle' | 'response' | 'headers'
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -104,8 +75,8 @@ function TerminalConsole({ apiConfig }) {
         fontFamily: 'IBM Plex Mono, monospace', fontSize: 11,
         color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0,
       }}>
-        Une API interne expose les fichiers du serveur via le paramètre ?file=.<br />
-        Essaie d'accéder à des fichiers en dehors du répertoire prévu.
+        Un endpoint interne répond sur /api/status.<br />
+        Envoie une requête et analyse ce que le serveur te retourne.
       </p>
       <div style={{
         background: '#0a0a0f',
@@ -125,63 +96,78 @@ function TerminalConsole({ apiConfig }) {
           fontWeight: 600,
           letterSpacing: '.1em',
         }}>
-          VERTEX FILE SERVER v1.2.0 — /api/files
+          VERTEX INTERNAL API — GET /api/status
         </div>
-        <div
-          ref={histRef}
-          style={{
-            padding: '10px',
-            maxHeight: 180,
-            overflowY: 'auto',
-            lineHeight: 1.7,
-          }}
-        >
-          {history.map((entry, i) => (
-            <div key={i} style={{ marginBottom: 4 }}>
+        <div style={{ padding: '10px', minHeight: 60, lineHeight: 1.7 }}>
+          {step === 'idle' && (
+            <span style={{ color: 'var(--text-muted)', fontSize: 11 }}>
+              En attente d'une requête…
+            </span>
+          )}
+          {step === 'response' && (
+            <>
               <div>
                 <span style={{ color: 'var(--accent)' }}>$ </span>
-                <span style={{ color: 'var(--text-primary)' }}>{entry.cmd}</span>
+                <span style={{ color: 'var(--text-primary)' }}>curl -s https://api.vertex-studio.internal/api/status</span>
               </div>
-              <div style={{ color: getRespColor(entry.resp), paddingLeft: 12, whiteSpace: 'pre-wrap' }}>
-                {entry.resp}
+              <div style={{ color: '#22c55e', paddingLeft: 12 }}>
+                {'{ "status": "ok", "version": "2.3.1", "env": "production" }'}
               </div>
-            </div>
-          ))}
+            </>
+          )}
+          {step === 'headers' && (
+            <>
+              <div>
+                <span style={{ color: 'var(--accent)' }}>$ </span>
+                <span style={{ color: 'var(--text-primary)' }}>curl -I https://api.vertex-studio.internal/api/status</span>
+              </div>
+              {DEBUG_HEADERS.map((h, i) => (
+                <div
+                  key={i}
+                  style={{
+                    paddingLeft: 12,
+                    color: h.flag ? '#22c55e' : 'var(--text-muted)',
+                    fontWeight: h.flag ? 700 : 400,
+                  }}
+                >
+                  {h.text}
+                </div>
+              ))}
+            </>
+          )}
         </div>
-        <div style={{
-          display: 'flex',
-          borderTop: '1px solid var(--border)',
-          padding: '6px 10px',
-          gap: 8,
-          alignItems: 'center',
-        }}>
-          <span style={{ color: 'var(--accent)', flexShrink: 0, fontSize: 11 }}>
-            $ GET /api/files?file=
-          </span>
-          <input
-            value={termInput}
-            onChange={e => setTermInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSend()}
-            placeholder="index.html"
-            style={{
-              flex: 1, background: 'none', border: 'none', outline: 'none',
-              color: 'var(--text-primary)',
-              fontFamily: 'IBM Plex Mono, monospace', fontSize: 12, minWidth: 0,
-            }}
-          />
+      </div>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <button
+          onClick={() => setStep('response')}
+          disabled={step !== 'idle'}
+          style={{
+            background: 'none',
+            border: `1px solid ${step === 'idle' ? 'var(--border-accent)' : 'var(--border)'}`,
+            borderRadius: 3, padding: '4px 12px',
+            color: step === 'idle' ? 'var(--accent)' : 'var(--text-muted)',
+            fontFamily: 'Rajdhani, sans-serif', fontWeight: 600, fontSize: 11,
+            cursor: step === 'idle' ? 'pointer' : 'default',
+            letterSpacing: '.06em',
+          }}
+        >
+          ENVOYER LA REQUÊTE
+        </button>
+        {step === 'response' && (
           <button
-            onClick={handleSend}
+            onClick={() => setStep('headers')}
             style={{
-              background: 'none', border: '1px solid var(--border)',
-              borderRadius: 3, padding: '2px 8px',
-              color: 'var(--text-secondary)',
+              background: 'none',
+              border: '1px solid var(--border-accent)',
+              borderRadius: 3, padding: '4px 12px',
+              color: 'var(--accent)',
               fontFamily: 'Rajdhani, sans-serif', fontWeight: 600, fontSize: 11,
-              cursor: 'pointer', letterSpacing: '.06em', flexShrink: 0,
+              cursor: 'pointer', letterSpacing: '.06em',
             }}
           >
-            ENVOYER
+            VOIR LES HEADERS BRUTS
           </button>
-        </div>
+        )}
       </div>
     </div>
   )
@@ -333,7 +319,7 @@ export default function CTFCard({ challenge, index }) {
   const renderArtifact = () => {
     switch (challenge.artifact.type) {
       case 'hash':     return <HashArtifact artifact={challenge.artifact} />
-      case 'url':      return <TerminalConsole apiConfig={challenge.apiConfig} />
+      case 'headers':  return <HeadersTerminal />
       case 'form':     return <AdminPanelLink />
       case 'image':    return <ImageArtifact artifact={challenge.artifact} />
       case 'text':     return <TextArtifact artifact={challenge.artifact} />
@@ -383,14 +369,16 @@ export default function CTFCard({ challenge, index }) {
       </div>
 
       {/* Description */}
-      <p style={{
-        fontFamily: 'IBM Plex Mono, monospace',
-        fontSize: '0.77rem',
-        color: 'var(--text-secondary)',
-        lineHeight: 1.8,
-      }}>
-        {challenge.description}
-      </p>
+      {challenge.description && (
+        <p style={{
+          fontFamily: 'IBM Plex Mono, monospace',
+          fontSize: '0.77rem',
+          color: 'var(--text-secondary)',
+          lineHeight: 1.8,
+        }}>
+          {challenge.description}
+        </p>
+      )}
 
       {/* Tags */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
@@ -429,16 +417,20 @@ export default function CTFCard({ challenge, index }) {
         {renderArtifact()}
       </div>
 
-      {/* Divider */}
-      <div style={{ height: 1, background: 'var(--border)' }} />
+      {challenge.difficulty !== 'wip' && (
+        <>
+          {/* Divider */}
+          <div style={{ height: 1, background: 'var(--border)' }} />
 
-      {/* Timer + Flag input */}
-      <CTFTimer challengeId={challenge.id} onStart={handleTimerStart} />
-      <CTFFlagInput
-        challengeId={challenge.id}
-        flagHash={challenge.flagHash}
-        startTime={startTime}
-      />
+          {/* Timer + Flag input */}
+          <CTFTimer challengeId={challenge.id} onStart={handleTimerStart} />
+          <CTFFlagInput
+            challengeId={challenge.id}
+            flagHash={challenge.flagHash}
+            startTime={startTime}
+          />
+        </>
+      )}
     </motion.div>
   )
 }
