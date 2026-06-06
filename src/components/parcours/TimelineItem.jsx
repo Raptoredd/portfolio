@@ -114,20 +114,15 @@ export default function TimelineItem({ item, side, dimmed }) {
           {item.badge}
         </div>
 
-        {/* Lieu + période */}
-        <div className="flex items-center gap-3">
-          {item.location && (
-            <div className="flex items-center gap-1">
-              <MapPin size={10} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
-              <span style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '0.72rem', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
-                {item.location}
-              </span>
-            </div>
-          )}
-          <span style={{ fontFamily: 'Share Tech Mono, monospace', fontSize: '0.7rem', color: 'var(--accent)', letterSpacing: '0.04em' }}>
-            {item.period || item.year}
-          </span>
-        </div>
+        {/* Lieu */}
+        {item.location && (
+          <div className="flex items-center gap-1">
+            <MapPin size={10} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+            <span style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '0.72rem', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
+              {item.location}
+            </span>
+          </div>
+        )}
 
         {/* Description */}
         <p style={{

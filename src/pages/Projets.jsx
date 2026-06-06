@@ -7,7 +7,9 @@ import { projectsData } from '../data/projectsData'
 
 export default function Projets() {
   const { teamMode } = useTeamMode()
-  const filtered = projectsData.filter(p => p.team === teamMode)
+  const filtered = projectsData
+    .filter(p => p.team === teamMode)
+    .sort((a, b) => parseInt(b.year) - parseInt(a.year))
 
   return (
     <div style={{ background: 'var(--bg-primary)', minHeight: 'calc(100vh - 56px)' }}>
@@ -41,8 +43,8 @@ export default function Projets() {
               }}
             >
               {teamMode === 'blue'
-                ? 'Défense, détection, réponse à incident'
-                : 'Offensif, tests d\'intrusion, adversarial simulation'}
+                ? 'Protection, détection, réponse à incident'
+                : 'Tests d\'intrusion, exploitation, adversarial simulation'}
             </motion.p>
           </AnimatePresence>
         </div>

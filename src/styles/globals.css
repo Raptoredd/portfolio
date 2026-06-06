@@ -21,51 +21,51 @@
 }
 
 .theme-green {
-  --bg-primary:    #050f05;
-  --bg-secondary:  #0a160a;
-  --bg-surface:    #0f1f0f;
+  --bg-primary:    #0a0a0f;
+  --bg-secondary:  #10101a;
+  --bg-surface:    #16162a;
   --accent:        #00ff41;
   --accent-dim:    #00bb30;
   --accent-glow:   rgba(0, 255, 65, 0.2);
-  --text-primary:  #d0ffd0;
-  --text-secondary:#66aa66;
-  --text-muted:    #2a4a2a;
-  --border:        #1a3a1a;
+  --text-primary:  #e8e8f0;
+  --text-secondary:#8888aa;
+  --text-muted:    #44445a;
+  --border:        #2a2a42;
   --border-accent: #00ff41;
-  --red-team:      #ff4444;
-  --blue-team:     #44aaff;
+  --red-team:      #f54b4b;
+  --blue-team:     #4b9ef5;
 }
 
 .theme-red {
-  --bg-primary:    #0f0505;
-  --bg-secondary:  #1a0808;
-  --bg-surface:    #200c0c;
+  --bg-primary:    #0a0a0f;
+  --bg-secondary:  #10101a;
+  --bg-surface:    #16162a;
   --accent:        #ff2b2b;
   --accent-dim:    #bb1a1a;
   --accent-glow:   rgba(255, 43, 43, 0.2);
-  --text-primary:  #ffd0d0;
-  --text-secondary:#aa5555;
-  --text-muted:    #4a2020;
-  --border:        #3a1010;
+  --text-primary:  #e8e8f0;
+  --text-secondary:#8888aa;
+  --text-muted:    #44445a;
+  --border:        #2a2a42;
   --border-accent: #ff2b2b;
-  --red-team:      #ff2b2b;
+  --red-team:      #f54b4b;
   --blue-team:     #4b9ef5;
 }
 
 .theme-cyan {
-  --bg-primary:    #030d12;
-  --bg-secondary:  #071820;
-  --bg-surface:    #0c2230;
+  --bg-primary:    #0a0a0f;
+  --bg-secondary:  #10101a;
+  --bg-surface:    #16162a;
   --accent:        #00e5ff;
   --accent-dim:    #009eb5;
   --accent-glow:   rgba(0, 229, 255, 0.2);
-  --text-primary:  #d0f8ff;
-  --text-secondary:#558899;
-  --text-muted:    #1a3a44;
-  --border:        #0f3040;
+  --text-primary:  #e8e8f0;
+  --text-secondary:#8888aa;
+  --text-muted:    #44445a;
+  --border:        #2a2a42;
   --border-accent: #00e5ff;
-  --red-team:      #ff4b4b;
-  --blue-team:     #00e5ff;
+  --red-team:      #f54b4b;
+  --blue-team:     #4b9ef5;
 }
 
 /* ─── RESET & BASE ───────────────────────────────────────── */
@@ -89,9 +89,15 @@ body {
   overflow-x: hidden;
 }
 
-/* Custom cursor override for interactive elements */
-a, button, [role="button"], select, input, textarea {
-  cursor: crosshair;
+/* Semantic cursors for interactive elements */
+a, button, [role="button"] {
+  cursor: pointer;
+}
+input, textarea {
+  cursor: text;
+}
+select {
+  cursor: pointer;
 }
 
 /* ─── GRAIN OVERLAY ──────────────────────────────────────── */

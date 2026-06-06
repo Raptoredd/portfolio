@@ -74,16 +74,34 @@ export default function Timeline({ leftItems, rightItems, leftLabel, rightLabel 
                 {/* Left item */}
                 <div onMouseEnter={() => setHoveredSide('left')}>
                   {leftItems[i] && (
-                    <TimelineItem
-                      item={leftItems[i]}
-                      side="left"
-                      dimmed={hoveredSide === 'right'}
-                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <span style={{
+                        fontFamily: 'Rajdhani, sans-serif',
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        letterSpacing: '0.1em',
+                        color: 'var(--text-muted)',
+                        textTransform: 'uppercase',
+                        whiteSpace: 'nowrap',
+                        textAlign: 'center',
+                        marginBottom: '4px',
+                      }}>
+                        {leftItems[i].period || leftItems[i].year}
+                      </span>
+                      <div style={{ width: '1px', height: '20px', borderLeft: '1px solid var(--border)', marginBottom: '4px' }} />
+                      <div style={{ width: '100%' }}>
+                        <TimelineItem
+                          item={leftItems[i]}
+                          side="left"
+                          dimmed={hoveredSide === 'right'}
+                        />
+                      </div>
+                    </div>
                   )}
                 </div>
 
                 {/* Center dot */}
-                <div className="flex flex-col items-center justify-start pt-5">
+                <div className="flex flex-col items-center justify-start" style={{ paddingTop: '46px' }}>
                   {(leftItems[i] || rightItems[i]) && (
                     <div
                       className="w-2.5 h-2.5 rounded-full flex-shrink-0"
@@ -101,11 +119,29 @@ export default function Timeline({ leftItems, rightItems, leftLabel, rightLabel 
                 <div onMouseEnter={() => setHoveredSide('right')}>
                   {rightItems[i] && (
                     <>
-                      <TimelineItem
-                        item={rightItems[i]}
-                        side="right"
-                        dimmed={hoveredSide === 'left'}
-                      />
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <span style={{
+                          fontFamily: 'Rajdhani, sans-serif',
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          letterSpacing: '0.1em',
+                          color: 'var(--text-muted)',
+                          textTransform: 'uppercase',
+                          whiteSpace: 'nowrap',
+                          textAlign: 'center',
+                          marginBottom: '4px',
+                        }}>
+                          {rightItems[i].period || rightItems[i].year}
+                        </span>
+                        <div style={{ width: '1px', height: '20px', borderLeft: '1px solid var(--border)', marginBottom: '4px' }} />
+                        <div style={{ width: '100%' }}>
+                          <TimelineItem
+                            item={rightItems[i]}
+                            side="right"
+                            dimmed={hoveredSide === 'left'}
+                          />
+                        </div>
+                      </div>
                       {rightContinues && (
                         <ContinuityConnector />
                       )}

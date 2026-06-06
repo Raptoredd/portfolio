@@ -207,6 +207,11 @@ export default function NetworkGraph() {
           maxZoom={2}
           style={{ background: 'var(--bg-primary, #0a0a0f)' }}
           proOptions={{ hideAttribution: true }}
+          nodesConnectable={false}
+          nodesDraggable={false}
+          edgesUpdatable={false}
+          nodesFocusable={false}
+          connectOnClick={false}
         >
           <Background color="#2a2a42" gap={20} size={1} />
           <Controls style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '4px' }} />

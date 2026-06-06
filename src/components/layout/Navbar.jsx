@@ -6,6 +6,7 @@ import {
   Home, GitBranch, Code2, Rss, Flag, Network, Mail,
 } from 'lucide-react'
 import { useTeamMode } from '../../context/TeamContext'
+import BracketLogo from '../ui/BracketLogo'
 
 const NAV_LINKS = [
   { to: '/',         label: 'ACCUEIL',  icon: Home      },
@@ -20,25 +21,7 @@ const NAV_LINKS = [
 function Logo() {
   return (
     <Link to="/" className="flex items-center gap-2 group">
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-        <rect
-          x="1" y="1" width="30" height="30"
-          rx="2"
-          stroke="var(--accent)"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <text
-          x="16" y="21"
-          textAnchor="middle"
-          fill="var(--accent)"
-          fontFamily="Orbitron, monospace"
-          fontSize="11"
-          fontWeight="700"
-        >
-          BB
-        </text>
-      </svg>
+      <BracketLogo size={32} />
       <span
         className="glitch glitch-subtle hidden sm:block"
         data-text="B.BAYLE"
@@ -80,7 +63,7 @@ function TeamBadge() {
       }}
     >
       {teamMode === 'blue' ? <Shield size={12} /> : <Swords size={12} />}
-      {teamMode === 'blue' ? 'BLUE TEAM' : 'RED TEAM'}
+      {teamMode === 'blue' ? 'DEFENSIVE' : 'OFFENSIVE'}
     </motion.div>
   )
 }
@@ -177,7 +160,7 @@ export default function Navbar() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'tween', duration: 0.25 }}
-            className="fixed top-0 right-0 bottom-0 z-40 w-64 flex flex-col pt-20 pb-6 px-6 gap-3"
+            className="fixed top-0 right-0 bottom-0 z-40 w-48 flex flex-col pt-16 pb-4 px-4 gap-2"
             style={{
               background: 'var(--bg-secondary)',
               borderLeft: '1px solid var(--border)',
@@ -193,13 +176,13 @@ export default function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   style={({ isActive }) => ({
                     fontFamily: 'Rajdhani, sans-serif',
-                    fontSize: '1rem',
+                    fontSize: '0.85rem',
                     fontWeight: 600,
                     letterSpacing: '0.12em',
                     color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
                     textDecoration: 'none',
                     borderLeft: isActive ? '2px solid var(--accent)' : '2px solid transparent',
-                    paddingLeft: '12px',
+                    paddingLeft: '8px',
                     transition: 'color 0.2s',
                     display: 'flex',
                     alignItems: 'center',

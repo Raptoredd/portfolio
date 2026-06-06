@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ChevronDown, ArrowRight, Github, Linkedin } from 'lucide-react'
+import { ArrowRight, Github, Linkedin } from 'lucide-react'
 import TerminalCursor from '../components/ui/TerminalCursor'
 import GlitchText from '../components/ui/GlitchText'
 import CertificationsModal from '../components/home/CertificationsModal'
+import BracketLogo from '../components/ui/BracketLogo'
 
 const SOCIAL_LINKS = [
   { label: 'GitHub',   href: 'https://github.com/Raptoredd',                         icon: Github   },
@@ -120,60 +121,23 @@ function AnimatedLogo() {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="flex flex-col items-center gap-2"
     >
-      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-        <motion.rect
-          x="2" y="2" width="76" height="76" rx="4"
-          stroke="var(--accent)"
-          strokeWidth="2"
-          fill="none"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.0, ease: 'easeInOut' }}
-        />
-        <motion.text
-          x="40" y="55"
-          textAnchor="middle"
-          fill="var(--accent)"
-          fontFamily="Orbitron, monospace"
-          fontSize="34"
-          fontWeight="700"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.4 }}
-        >
-          BB
-        </motion.text>
-      </svg>
+      <BracketLogo size={80} />
     </motion.div>
   )
 }
 
-function ScrollIndicator() {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 3.0, duration: 0.6 }}
-      className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
-      style={{ color: 'var(--text-muted)' }}
-    >
-      <span style={{ fontFamily: 'Rajdhani, sans-serif', fontSize: '0.65rem', letterSpacing: '0.15em' }}>
-        SCROLL
-      </span>
-      <motion.div
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <ChevronDown size={18} />
-      </motion.div>
-    </motion.div>
-  )
-}
 
 export default function Home() {
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [showCertModal, setShowCertModal] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   useEffect(() => {
     const timers = [
@@ -192,7 +156,7 @@ export default function Home() {
       style={{ background: 'var(--bg-primary)', minHeight: '100vh' }}
     >
       {/* Hero */}
-      <section className="relative flex flex-col items-center justify-center" style={{ minHeight: 'calc(100vh - 56px)' }}>
+      <section className="relative flex flex-col items-center justify-center" style={{ minHeight: isMobile ? 'calc(100vh - 56px)' : 'calc(100vh - 56px - 90px)' }}>
         <NetworkDotGrid />
 
         <div className="relative z-10 flex flex-col items-center text-center px-6 gap-6 max-w-3xl mx-auto">
@@ -289,34 +253,36 @@ export default function Home() {
                   VOIR LE PARCOURS <ArrowRight size={14} />
                 </Link>
 
-                <Link
-                  to="/projets"
-                  className="flex items-center gap-2 px-5 py-2.5 transition-all"
-                  style={{
-                    fontFamily: 'Rajdhani, sans-serif',
-                    fontSize: '0.85rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.12em',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text-secondary)',
-                    background: 'var(--bg-surface)',
-                    textDecoration: 'none',
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = 'var(--accent)'
-                    e.currentTarget.style.color = 'var(--text-primary)'
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = 'var(--border)'
-                    e.currentTarget.style.color = 'var(--text-secondary)'
-                  }}
-                >
-                  EXPLORER LES PROJETS <ArrowRight size={14} />
-                </Link>
+                {!isMobile && (
+                  <Link
+                    to="/projets"
+                    className="flex items-center gap-2 px-5 py-2.5 transition-all"
+                    style={{
+                      fontFamily: 'Rajdhani, sans-serif',
+                      fontSize: '0.85rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text-secondary)',
+                      background: 'var(--bg-surface)',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.borderColor = 'var(--accent)'
+                      e.currentTarget.style.color = 'var(--text-primary)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.borderColor = 'var(--border)'
+                      e.currentTarget.style.color = 'var(--text-secondary)'
+                    }}
+                  >
+                    EXPLORER LES PROJETS <ArrowRight size={14} />
+                  </Link>
+                )}
               </div>
 
               {/* Stats */}
-              <div className="flex flex-wrap gap-3 justify-center">
+              <div className={`flex ${isMobile ? 'flex-col' : 'flex-wrap'} gap-3 justify-center`}>
                 <StatCard value="8 000+"     sublabel="Root-me.pro"    label="points"         breathe onClick={() => window.open('https://root-me.pro', '_blank', 'noopener')} />
                 <StatCard value="6"          sublabel="Certifications" label="obtenues"       breathe onClick={() => setShowCertModal(true)} />
                 <StatCard value="Zero Trust" sublabel="hegemonia.lan"  label="Infrastructure" breathe onClick={() => navigate('/homelab')} />
@@ -360,7 +326,6 @@ export default function Home() {
           )}
         </div>
 
-        {step >= 5 && <ScrollIndicator />}
         {showCertModal && <CertificationsModal onClose={() => setShowCertModal(false)} />}
       </section>
 
@@ -403,7 +368,7 @@ export default function Home() {
             <div className="flex flex-col gap-4">
               {[
                 { label: 'FORMATION',      value: 'Bachelor R&S — Guardia CS'    },
-                { label: 'DISCIPLINES',    value: 'Attaque & Défense'              },
+                { label: 'DISCIPLINES',    value: 'Offensive & Defensive'          },
                 { label: 'ALTERNANCE',     value: 'Malakoff Humanis — IT Support' },
                 { label: 'DISPONIBILITÉ',  value: '2026 (fin de formation)'       },
               ].map(item => (

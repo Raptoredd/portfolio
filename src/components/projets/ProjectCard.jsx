@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   BarChart2, Globe, Network, Terminal, FileText, Radar,
-  Shield, Swords, Server, Lock, Bug, Cpu, Github, ChevronDown,
+  Shield, Swords, Server, Lock, Bug, Cpu, Github,
 } from 'lucide-react'
 
 const ICON_MAP = {
@@ -11,7 +11,7 @@ const ICON_MAP = {
 }
 
 export default function ProjectCard({ project }) {
-  const [expanded, setExpanded] = useState(false)
+  const [hovered, setHovered] = useState(false)
   const Icon = ICON_MAP[project.icon] || Terminal
   const isBlue = project.team === 'blue'
   const teamColor = isBlue ? 'var(--blue-team)' : 'var(--red-team)'
@@ -28,18 +28,14 @@ export default function ProjectCard({ project }) {
       className="flex flex-col gap-3 p-5 rounded"
       style={{
         background: 'var(--bg-surface)',
-        border: '1px solid var(--border)',
+        border: `1px solid ${hovered ? 'var(--border-accent)' : 'var(--border)'}`,
+        boxShadow: hovered ? '0 0 12px var(--accent-glow)' : 'none',
         transition: 'border-color 0.2s, box-shadow 0.2s',
         cursor: 'default',
       }}
-      onMouseEnter={e => {
-        e.currentTarget.style.borderColor = 'var(--border-accent)'
-        e.currentTarget.style.boxShadow = '0 0 12px var(--accent-glow)'
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.borderColor = 'var(--border)'
-        e.currentTarget.style.boxShadow = 'none'
-      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => setHovered(v => !v)}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
@@ -83,38 +79,19 @@ export default function ProjectCard({ project }) {
         {project.description}
       </p>
 
-      {/* Highlights (collapsible) */}
+      {/* Highlights (revealed on hover / tap) */}
       {hasHighlights && (
-        <div>
-          <button
-            onClick={() => setExpanded(v => !v)}
-            className="flex items-center gap-1.5 transition-colors"
-            style={{
-              fontFamily: 'Rajdhani, sans-serif',
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              letterSpacing: '0.1em',
-              color: 'var(--text-muted)',
-              background: 'none',
-              border: 'none',
-              padding: 0,
-            }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)' }}
-          >
-            <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              <ChevronDown size={13} />
-            </motion.span>
-            {expanded ? 'MASQUER LES DÉTAILS' : `DÉTAILS TECHNIQUES (${project.highlights.length})`}
-          </button>
-
-          <motion.div
-            initial={false}
-            animate={{ height: expanded ? 'auto' : 0, opacity: expanded ? 1 : 0 }}
-            transition={{ duration: 0.25 }}
-            style={{ overflow: 'hidden' }}
-          >
-            <ul className="flex flex-col gap-2 mt-3">
+        <AnimatePresence>
+          {hovered && (
+            <motion.ul
+              key="highlights"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              style={{ overflow: 'hidden' }}
+              className="flex flex-col gap-2"
+            >
               {project.highlights.map((h, i) => (
                 <li
                   key={i}
@@ -125,9 +102,9 @@ export default function ProjectCard({ project }) {
                   {h}
                 </li>
               ))}
-            </ul>
-          </motion.div>
-        </div>
+            </motion.ul>
+          )}
+        </AnimatePresence>
       )}
 
       {/* Note (WIP / dépôt privé) */}
@@ -192,6 +169,7 @@ export default function ProjectCard({ project }) {
               e.currentTarget.style.color = 'var(--text-muted)'
               e.currentTarget.style.borderColor = 'var(--border)'
             }}
+            onClick={e => e.stopPropagation()}
           >
             <Github size={13} /> GITHUB
           </a>

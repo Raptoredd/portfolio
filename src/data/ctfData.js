@@ -198,7 +198,7 @@ export const CTF_CHALLENGES = [
     difficulty: 'easy',
     description:
       'Une photo anodine prise dans le jardin du Directeur Général de Vertex Studio. ' +
-      'Une simple boîte d\'allumettes dans l\'herbe. ' +
+      'Une simple boîte d\'allumettes dans son jardin. ' +
       'Mais les métadonnées, elles, ne mentent jamais.',
     tags: ['EXIF', 'metadata', 'exiftool'],
     artifact: {

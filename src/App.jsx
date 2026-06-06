@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
 import ThemeWidget from './components/layout/ThemeWidget'
 import PageTransition from './components/layout/PageTransition'
 import Home from './pages/Home'
@@ -16,7 +17,7 @@ import Contact from './pages/Contact'
 
 export default function App() {
   const location = useLocation()
-  const isStandalone = location.pathname === '/vertex-admin'
+  const isStandalone = ['/vertex-admin', '/C2', '/ctf/solutions'].includes(location.pathname)
 
   return (
     <>
@@ -51,6 +52,7 @@ export default function App() {
           } />
         </Routes>
       </AnimatePresence>
+      {!isStandalone && <Footer />}
       {!isStandalone && <ThemeWidget />}
     </>
   )

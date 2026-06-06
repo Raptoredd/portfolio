@@ -30,7 +30,7 @@ export default function TeamToggle() {
           }}
         />
 
-        {/* Blue Team */}
+        {/* Defensive */}
         <button
           onClick={() => setTeam('blue')}
           className="relative flex items-center gap-2 px-8 py-3 transition-colors"
@@ -44,10 +44,10 @@ export default function TeamToggle() {
           }}
         >
           <Shield size={16} />
-          BLUE TEAM
+          DEFENSIVE
         </button>
 
-        {/* Red Team */}
+        {/* Offensive */}
         <button
           onClick={() => setTeam('red')}
           className="relative flex items-center gap-2 px-8 py-3 transition-colors"
@@ -61,7 +61,7 @@ export default function TeamToggle() {
           }}
         >
           <Swords size={16} />
-          RED TEAM
+          OFFENSIVE
         </button>
       </div>
     </div>
