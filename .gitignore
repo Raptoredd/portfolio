@@ -30,3 +30,4 @@ Thumbs.db
 # Graphify
 graphify-out/cost.json
 graphify-out/cache/
+!.claude/settings.json
