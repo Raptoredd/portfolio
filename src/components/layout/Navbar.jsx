@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Menu, X, Shield, Swords,
+  Menu, X, Shield, Swords, GraduationCap, Briefcase,
   Home, GitBranch, Code2, Rss, Flag, Network, Mail,
 } from 'lucide-react'
 import { useTeamMode } from '../../context/TeamContext'
@@ -73,6 +73,40 @@ function TeamBadge() {
   )
 }
 
+function ParcoursBadge() {
+  const location = useLocation()
+  const [tab, setTab] = useState(() => sessionStorage.getItem('parcours_tab') || 'etudes')
+
+  useEffect(() => {
+    const handler = e => setTab(e.detail)
+    window.addEventListener('parcours-tab-change', handler)
+    return () => window.removeEventListener('parcours-tab-change', handler)
+  }, [])
+
+  if (location.pathname !== '/parcours') return null
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      className="flex items-center gap-1 px-2 py-1 rounded"
+      style={{
+        border: '1px solid var(--border-accent)',
+        color: 'var(--accent)',
+        background: 'transparent',
+        fontFamily: 'Rajdhani, sans-serif',
+        fontSize: '0.7rem',
+        fontWeight: 700,
+        letterSpacing: '0.12em',
+      }}
+    >
+      {tab === 'etudes' ? <GraduationCap size={12} /> : <Briefcase size={12} />}
+      {tab === 'etudes' ? 'ÉTUDES' : 'PRO'}
+    </motion.div>
+  )
+}
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
@@ -93,6 +127,9 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <AnimatePresence mode="wait">
             <TeamBadge key={location.pathname} />
+          </AnimatePresence>
+          <AnimatePresence mode="wait">
+            <ParcoursBadge key={location.pathname} />
           </AnimatePresence>
 
           {/* Desktop nav */}

@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Github, Linkedin, ChevronDown } from 'lucide-react'
 import TerminalCursor from '../components/ui/TerminalCursor'
 import GlitchText from '../components/ui/GlitchText'
-import CertificationsModal from '../components/home/CertificationsModal'
 
 const SOCIAL_LINKS = [
   { label: 'GitHub',   href: 'https://github.com/Raptoredd',                         icon: Github   },
@@ -135,8 +134,7 @@ function AnimatedLogo() {
 export default function Home() {
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
-  const [showCertModal, setShowCertModal] = useState(false)
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
+const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 768)
@@ -289,7 +287,7 @@ export default function Home() {
               {/* Stats */}
               <div className={`flex ${isMobile ? 'flex-col' : 'flex-wrap'} gap-3 justify-center`}>
                 <StatCard value="8 000+"     sublabel="Root-me.pro"    label="points"         breathe onClick={() => window.open('https://root-me.pro', '_blank', 'noopener')} />
-                <StatCard value="6"          sublabel="Certifications" label="obtenues"       breathe onClick={() => setShowCertModal(true)} />
+                <StatCard value="6"          sublabel="Certifications" label="obtenues"       breathe onClick={() => navigate('/parcours', { state: { openCertModal: true } })} />
                 <StatCard value="Zero Trust" sublabel="hegemonia.lan"  label="Infrastructure" breathe onClick={() => navigate('/homelab')} />
               </div>
 
@@ -362,7 +360,6 @@ export default function Home() {
           )}
         </div>
 
-        {showCertModal && <CertificationsModal onClose={() => setShowCertModal(false)} />}
       </section>
 
       {/* À propos */}
@@ -386,18 +383,48 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-12">
             <div style={{ color: 'var(--text-secondary)', lineHeight: 1.9, fontSize: '0.9rem' }}>
               <p>
-                Étudiant en Bachelor Réseaux &amp; Sécurité à Guardia Cybersecurity School
-                (RNCP37680 — Administrateur d'Infrastructures Sécurisées), je me forme
-                aux deux faces de la cybersécurité : défense active et tests d'intrusion.
+                Étudiant en{' '}
+                <Link to="/parcours"
+                  style={{ color: 'var(--accent)', textDecoration: 'none' }}
+                  onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
+                  onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
+                >Bachelor Cybersécurité</Link>
+                {' '}à Guardia Cybersecurity School, spécialisé en défense active et{' '}
+                <Link to="/projets"
+                  style={{ color: 'var(--accent)', textDecoration: 'none' }}
+                  onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
+                  onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
+                >tests d'intrusion</Link>.
               </p>
               <p className="mt-4">
-                Actuellement en alternance chez Malakoff Humanis en tant que Technicien Support de Proximité,
-                je gère au quotidien les incidents N1/N2, l'IAM (EntraID, Active Directory, Intune/SCCM)
-                et le suivi des postes via SysTrack. En parallèle de ces missions IT,
-                j'ai développé ProxiSave — un outil de sauvegarde sécurisé conçu selon une approche DevSecOps,
-                soumis à l'équipe SecOp pour validation et whitelisting EDR.
-                Mon profil couvre l'ensemble du spectre défense–attaque :
-                conception d'infrastructures Zero Trust, analyse sécurité et tests offensifs.
+                En alternance chez Malakoff Humanis : gestion des incidents N1/N2,{' '}
+                <Link to="/homelab"
+                  style={{ color: 'var(--accent)', textDecoration: 'none' }}
+                  onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
+                  onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
+                >IAM</Link>
+                {' '}(EntraID, Active Directory, Intune), supervision SysTrack.{' '}
+                Projet personnel :{' '}
+                <Link to="/projets"
+                  style={{ color: 'var(--accent)', textDecoration: 'none' }}
+                  onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
+                  onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
+                >ProxiSave</Link>
+                , outil DevSecOps validé par l'équipe SecOp.
+              </p>
+              <p className="mt-4">
+                Profil couvrant l'ensemble du spectre : infrastructures{' '}
+                <Link to="/homelab"
+                  style={{ color: 'var(--accent)', textDecoration: 'none' }}
+                  onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
+                  onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
+                >Zero Trust</Link>
+                ,{' '}
+                <Link to="/projets"
+                  style={{ color: 'var(--accent)', textDecoration: 'none' }}
+                  onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
+                  onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
+                >analyse et tests offensifs</Link>.
               </p>
             </div>
 
@@ -406,7 +433,7 @@ export default function Home() {
                 { label: 'FORMATION',      value: 'Bachelor R&S — Guardia CS'    },
                 { label: 'DISCIPLINES',    value: 'Offensive & Defensive'          },
                 { label: 'ALTERNANCE',     value: 'Malakoff Humanis — IT Support' },
-                { label: 'DISPONIBILITÉ',  value: '2026 (fin de formation)'       },
+                { label: 'DISPONIBILITÉ',  value: 'Disponible à partir du 15 sept. 2026' },
               ].map(item => (
                 <div
                   key={item.label}

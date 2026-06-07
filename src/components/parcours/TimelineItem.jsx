@@ -35,12 +35,14 @@ export default function TimelineItem({ item, side, dimmed }) {
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      style={{
-        opacity: dimmed ? 0.15 : 1,
-        transform: dimmed ? 'scale(0.97)' : 'scale(1)',
-        transition: 'opacity 0.3s, transform 0.3s',
-      }}
     >
+      <div
+        style={{
+          opacity: dimmed ? 0.15 : 1,
+          transform: dimmed ? 'scale(0.97)' : 'scale(1)',
+          transition: 'opacity 0.3s, transform 0.3s',
+        }}
+      >
       <div
         className="p-4 rounded flex flex-col gap-2.5"
         onClick={() => hasHighlights && setExpanded(v => !v)}
@@ -177,6 +179,7 @@ export default function TimelineItem({ item, side, dimmed }) {
             </motion.div>
           </div>
         )}
+      </div>
       </div>
     </motion.div>
   )

@@ -1,13 +1,13 @@
 export const timelineEtudes = [
   {
     id: 'e3',
-    period: 'Sept 2025 — …',
+    period: 'Sept 2025 — Sept 2026',
     year: '2025',
     title: 'Guardia Cybersecurity School',
     location: 'La Défense',
     type: 'BACHELOR → MASTER',
-    badge: 'En cours',
-    description: "Entrée en 3ème année de Bachelor cybersécurité (RNCP37680), avec poursuite prévue en Master. Modules : chiffrement, pentest web, GRC, maîtrise de l'information, sécurisation ISR, virtualisation, rétroconception, attaques matérielles.",
+    badge: "Bachelor RNCP37680 — en cours d'obtention",
+    description: "Diplôme en cours d'obtention (Bachelor RNCP37680 — Administrateur d'Infrastructures Sécurisées), poursuite prévue en Master. Modules : chiffrement, pentest web, GRC, maîtrise de l'information, sécurisation ISR, virtualisation, rétroconception, attaques matérielles.",
     icon: 'GraduationCap',
     current: true,
   },
@@ -45,7 +45,7 @@ export const timelinePro = [
     title: 'Malakoff Humanis',
     location: 'Val-de-Fontenay',
     type: 'ALTERNANCE',
-    badge: 'En cours',
+    badge: 'Technicien IT N2',
     description: "Alternance Technicien Support de Proximité — Bachelor Guardia. Missions IT quotidiennes (N1/N2, IAM, MDM) et développement de ProxiSave en initiative personnelle parallèle.",
     highlights: [
       'IAM : EntraID & Active Directory — gestion des accès, moindre privilège, corrélation MyAccess',
