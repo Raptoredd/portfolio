@@ -8,9 +8,11 @@ import CertificationsModal from '../components/home/CertificationsModal'
 import { timelineEtudes, timelinePro } from '../data/timelineData'
 
 export default function Parcours() {
-  const [showCertModal, setShowCertModal] = useState(false)
-  const [activeTab, setActiveTab] = useState('etudes')
   const location = useLocation()
+  const [showCertModal, setShowCertModal] = useState(false)
+  const [activeTab, setActiveTab] = useState(
+    location.state?.activeTab || sessionStorage.getItem('parcours_tab') || 'etudes'
+  )
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)

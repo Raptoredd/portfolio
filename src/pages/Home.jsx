@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowRight, Github, Linkedin, ChevronDown } from 'lucide-react'
+import { useTeamMode } from '../context/TeamContext'
 import TerminalCursor from '../components/ui/TerminalCursor'
 import GlitchText from '../components/ui/GlitchText'
 
@@ -133,6 +134,7 @@ function AnimatedLogo() {
 
 export default function Home() {
   const navigate = useNavigate()
+  const { setTeam } = useTeamMode()
   const [step, setStep] = useState(0)
 const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
 
@@ -385,12 +387,21 @@ const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
               <p>
                 Étudiant en{' '}
                 <Link to="/parcours"
+                  onClick={() => window.scrollTo(0, 0)}
                   style={{ color: 'var(--accent)', textDecoration: 'none' }}
                   onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
                   onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
                 >Bachelor Cybersécurité</Link>
-                {' '}à Guardia Cybersecurity School, spécialisé en défense active et{' '}
+                {' '}à Guardia Cybersecurity School, spécialisé en{' '}
                 <Link to="/projets"
+                  onClick={() => { setTeam('blue'); window.scrollTo(0, 0) }}
+                  style={{ color: 'var(--accent)', textDecoration: 'none' }}
+                  onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
+                  onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
+                >défense active</Link>
+                {' '}et{' '}
+                <Link to="/projets"
+                  onClick={() => { setTeam('red'); window.scrollTo(0, 0) }}
                   style={{ color: 'var(--accent)', textDecoration: 'none' }}
                   onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
                   onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
@@ -398,7 +409,9 @@ const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
               </p>
               <p className="mt-4">
                 En alternance chez Malakoff Humanis : gestion des incidents N1/N2,{' '}
-                <Link to="/homelab"
+                <Link to="/parcours"
+                  state={{ activeTab: 'pro' }}
+                  onClick={() => window.scrollTo(0, 0)}
                   style={{ color: 'var(--accent)', textDecoration: 'none' }}
                   onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
                   onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
@@ -406,25 +419,12 @@ const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
                 {' '}(EntraID, Active Directory, Intune), supervision SysTrack.{' '}
                 Projet personnel :{' '}
                 <Link to="/projets"
+                  onClick={() => window.scrollTo(0, 0)}
                   style={{ color: 'var(--accent)', textDecoration: 'none' }}
                   onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
                   onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
                 >ProxiSave</Link>
                 , outil DevSecOps validé par l'équipe SecOp.
-              </p>
-              <p className="mt-4">
-                Profil couvrant l'ensemble du spectre : infrastructures{' '}
-                <Link to="/homelab"
-                  style={{ color: 'var(--accent)', textDecoration: 'none' }}
-                  onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
-                  onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
-                >Zero Trust</Link>
-                ,{' '}
-                <Link to="/projets"
-                  style={{ color: 'var(--accent)', textDecoration: 'none' }}
-                  onMouseEnter={e => { e.currentTarget.style.textDecoration = 'underline' }}
-                  onMouseLeave={e => { e.currentTarget.style.textDecoration = 'none' }}
-                >analyse et tests offensifs</Link>.
               </p>
             </div>
 
