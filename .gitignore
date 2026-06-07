@@ -24,10 +24,12 @@ npm-debug.log*
 Thumbs.db
 
 # Fichiers sensibles
-.claude/
 .env.example
 
 # Graphify
-graphify-out/cost.json
-graphify-out/cache/
+graphify-out/
+CLAUDE.md
+
+# Claude Code — conserver uniquement settings.json
+.claude/*
 !.claude/settings.json
