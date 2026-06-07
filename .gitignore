@@ -1,35 +1,26 @@
 # Dependencies
 node_modules/
-
 # Build output
 dist/
-
 # Environment — NE JAMAIS COMMITTER
 .env
 .env.local
 .env.*.local
-
 # Logs
 *.log
 npm-debug.log*
-
 # Editor
 .vscode/
 .idea/
 *.swp
 *.swo
-
 # OS
 .DS_Store
 Thumbs.db
-
 # Fichiers sensibles
 .env.example
-
 # Graphify
 graphify-out/
 CLAUDE.md
-
 # Claude Code — conserver uniquement settings.json
-.claude/*
-!.claude/settings.json
+.claude/
