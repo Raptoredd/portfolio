@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, Github, Linkedin } from 'lucide-react'
+import { ArrowRight, Github, Linkedin, ChevronDown } from 'lucide-react'
 import TerminalCursor from '../components/ui/TerminalCursor'
 import GlitchText from '../components/ui/GlitchText'
 import CertificationsModal from '../components/home/CertificationsModal'
-import BracketLogo from '../components/ui/BracketLogo'
 
 const SOCIAL_LINKS = [
   { label: 'GitHub',   href: 'https://github.com/Raptoredd',                         icon: Github   },
@@ -121,7 +120,13 @@ function AnimatedLogo() {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="flex flex-col items-center gap-2"
     >
-      <BracketLogo size={80} />
+      <img
+        src="/fox1.png"
+        alt="Logo Benjamin Bayle"
+        width={120}
+        height={120}
+        style={{ objectFit: 'contain' }}
+      />
     </motion.div>
   )
 }
@@ -322,6 +327,37 @@ export default function Home() {
                   </a>
                 ))}
               </div>
+            </motion.div>
+          )}
+          {!isMobile && step >= 5 && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '4px',
+                cursor: 'default',
+              }}
+            >
+              <span style={{
+                fontFamily: 'Rajdhani, sans-serif',
+                fontSize: '0.62rem',
+                fontWeight: 600,
+                letterSpacing: '0.15em',
+                color: 'var(--text-muted)',
+                textTransform: 'uppercase',
+              }}>
+                SCROLL
+              </span>
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <ChevronDown size={16} style={{ color: 'var(--text-muted)' }} />
+              </motion.div>
             </motion.div>
           )}
         </div>

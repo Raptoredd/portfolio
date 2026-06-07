@@ -6,7 +6,6 @@ import {
   Home, GitBranch, Code2, Rss, Flag, Network, Mail,
 } from 'lucide-react'
 import { useTeamMode } from '../../context/TeamContext'
-import BracketLogo from '../ui/BracketLogo'
 
 const NAV_LINKS = [
   { to: '/',         label: 'ACCUEIL',  icon: Home      },
@@ -21,7 +20,13 @@ const NAV_LINKS = [
 function Logo() {
   return (
     <Link to="/" className="flex items-center gap-2 group">
-      <BracketLogo size={32} />
+      <img
+        src="/fox.png"
+        alt="Logo"
+        width={28}
+        height={28}
+        style={{ objectFit: 'contain' }}
+      />
       <span
         className="glitch glitch-subtle hidden sm:block"
         data-text="B.BAYLE"

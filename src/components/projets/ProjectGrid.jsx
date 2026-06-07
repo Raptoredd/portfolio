@@ -4,9 +4,8 @@ import ProjectCard from './ProjectCard'
 export default function ProjectGrid({ projects }) {
   return (
     <motion.div
-      layout
       className="grid gap-5"
-      style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}
+      style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', alignItems: 'stretch' }}
     >
       <AnimatePresence mode="popLayout">
         {projects.map(project => (

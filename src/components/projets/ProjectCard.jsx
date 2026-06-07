@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   BarChart2, Globe, Network, Terminal, FileText, Radar,
-  Shield, Swords, Server, Lock, Bug, Cpu, Github,
+  Shield, Swords, Server, Lock, Bug, Cpu, Github, ChevronDown,
 } from 'lucide-react'
 
 const ICON_MAP = {
@@ -11,7 +11,7 @@ const ICON_MAP = {
 }
 
 export default function ProjectCard({ project }) {
-  const [hovered, setHovered] = useState(false)
+  const [expanded, setExpanded] = useState(false)
   const Icon = ICON_MAP[project.icon] || Terminal
   const isBlue = project.team === 'blue'
   const teamColor = isBlue ? 'var(--blue-team)' : 'var(--red-team)'
@@ -19,23 +19,28 @@ export default function ProjectCard({ project }) {
 
   return (
     <motion.div
-      layout
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8 }}
-      whileHover={{ y: -2 }}
       transition={{ duration: 0.25 }}
       className="flex flex-col gap-3 p-5 rounded"
+      onClick={() => hasHighlights && setExpanded(v => !v)}
       style={{
+        height: '100%',
         background: 'var(--bg-surface)',
-        border: `1px solid ${hovered ? 'var(--border-accent)' : 'var(--border)'}`,
-        boxShadow: hovered ? '0 0 12px var(--accent-glow)' : 'none',
+        border: '1px solid var(--border)',
         transition: 'border-color 0.2s, box-shadow 0.2s',
-        cursor: 'default',
+        cursor: hasHighlights ? 'pointer' : 'default',
+        userSelect: 'none',
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={() => setHovered(v => !v)}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = 'var(--border-accent)'
+        e.currentTarget.style.boxShadow = '0 0 10px var(--accent-glow)'
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = 'var(--border)'
+        e.currentTarget.style.boxShadow = 'none'
+      }}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
@@ -75,37 +80,10 @@ export default function ProjectCard({ project }) {
         fontSize: '0.8rem',
         color: 'var(--text-secondary)',
         lineHeight: 1.75,
+        flexGrow: 1,
       }}>
         {project.description}
       </p>
-
-      {/* Highlights (revealed on hover / tap) */}
-      {hasHighlights && (
-        <AnimatePresence>
-          {hovered && (
-            <motion.ul
-              key="highlights"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25 }}
-              style={{ overflow: 'hidden' }}
-              className="flex flex-col gap-2"
-            >
-              {project.highlights.map((h, i) => (
-                <li
-                  key={i}
-                  className="flex gap-2"
-                  style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.65 }}
-                >
-                  <span style={{ color: teamColor, flexShrink: 0 }}>›</span>
-                  {h}
-                </li>
-              ))}
-            </motion.ul>
-          )}
-        </AnimatePresence>
-      )}
 
       {/* Note (WIP / dépôt privé) */}
       {project.note && (
@@ -123,7 +101,7 @@ export default function ProjectCard({ project }) {
       )}
 
       {/* Footer : tags + GitHub */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mt-auto">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
           {project.tags.map(tag => (
             <span
@@ -175,6 +153,52 @@ export default function ProjectCard({ project }) {
           </a>
         )}
       </div>
+
+      {/* Highlights collapsibles */}
+      {hasHighlights && (
+        <div>
+          <button
+            className="flex items-center gap-1 transition-colors"
+            style={{
+              fontFamily: 'Rajdhani, sans-serif',
+              fontSize: '0.7rem',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              color: 'var(--text-muted)',
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+            }}
+            onClick={e => { e.stopPropagation(); setExpanded(v => !v) }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)' }}
+          >
+            <motion.span animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
+              <ChevronDown size={12} />
+            </motion.span>
+            {expanded ? 'MASQUER' : `DÉTAILS (${project.highlights.length})`}
+          </button>
+
+          <motion.div
+            initial={false}
+            animate={{ height: expanded ? 'auto' : 0, opacity: expanded ? 1 : 0 }}
+            transition={{ duration: 0.25 }}
+            style={{ overflow: 'hidden' }}
+          >
+            <ul className="flex flex-col gap-1.5 mt-2">
+              {project.highlights.map((h, i) => (
+                <li key={i} className="flex gap-1.5">
+                  <span style={{ color: teamColor, flexShrink: 0, fontSize: '0.7rem' }}>›</span>
+                  <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: '0.73rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                    {h}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   )
 }
