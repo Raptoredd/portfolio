@@ -6,7 +6,7 @@
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Deployed-222222?logo=githubpages&logoColor=white)](https://benjaminbayle.tech)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-> Portfolio personnel d’un analyste cybersécurité opérationnelle.  
+> Portfolio personnel d’un analyste junior cybersécurité opérationnelle.  
 > Design cyberpunk, thèmes dynamiques, et challenges CTF jouables directement dans le navigateur.
 
 🔗 **Live : [benjaminbayle.tech](https://benjaminbayle.tech)**
