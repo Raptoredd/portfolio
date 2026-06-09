@@ -1,3 +1,0 @@
-Asset CTF à venir — Who Am I? (OSINT-1)
-Remplacer ce fichier par : osint1.jpg
-Commande EXIF : exiftool -Comment="FLAG{3x1f_m3t4d4t4_n3v3r_l13s}" Image-CTF.jpg -o osint1.jpg

@@ -4,6 +4,9 @@ import { Download, Copy, Check, ExternalLink } from 'lucide-react'
 import CTFTimer from './CTFTimer'
 import CTFFlagInput from './CTFFlagInput'
 import CTFHintBadge from './CTFHintBadge'
+import VisionCorpCCTV from './challenges/VisionCorpCCTV'
+
+const CHALLENGE_COMPONENTS = { VisionCorpCCTV }
 
 const DIFFICULTY = {
   easy:   { label: 'EASY',              bg: 'rgba(34,197,94,0.12)',   color: '#22c55e' },
@@ -61,7 +64,6 @@ const DEBUG_HEADERS = [
   { text: 'X-Powered-By: VertexCore/2.3',                             flag: false },
   { text: 'Cache-Control: no-store',                                   flag: false },
   { text: 'X-Request-ID: a3f9c2e1',                                   flag: false },
-  { text: 'X-Debug-Flag: FLAG{h34d3rs_4r3_s1l3nt_w1tn3ss3s}',        flag: true  },
 ]
 
 function HeadersTerminal() {
@@ -315,7 +317,11 @@ export default function CTFCard({ challenge, index }) {
   const handleTimerStart = (t) => setStartTime(t)
 
   const renderArtifact = () => {
-    switch (challenge.artifact.type) {
+    if (challenge.component) {
+      const Comp = CHALLENGE_COMPONENTS[challenge.component]
+      return Comp ? <Comp /> : null
+    }
+    switch (challenge.artifact?.type) {
       case 'hash':     return <HashArtifact artifact={challenge.artifact} />
       case 'headers':  return <HeadersTerminal />
       case 'form':     return <AdminPanelLink />
@@ -395,23 +401,25 @@ export default function CTFCard({ challenge, index }) {
         ))}
       </div>
 
-      {/* Artifact */}
+      {/* Artifact / Component */}
       <div style={{
-        background: 'var(--bg-primary)',
-        border: '1px solid var(--border)',
+        background: challenge.component ? 'transparent' : 'var(--bg-primary)',
+        border: challenge.component ? 'none' : '1px solid var(--border)',
         borderRadius: 4,
-        padding: '10px 12px',
+        padding: challenge.component ? 0 : '10px 12px',
         display: 'flex',
         flexDirection: 'column',
         gap: 8,
       }}>
-        <span style={{
-          fontFamily: 'Rajdhani, sans-serif', fontSize: 10,
-          color: 'var(--text-muted)', letterSpacing: '.1em',
-          fontWeight: 600, textTransform: 'uppercase',
-        }}>
-          {challenge.artifact.label}
-        </span>
+        {challenge.artifact && (
+          <span style={{
+            fontFamily: 'Rajdhani, sans-serif', fontSize: 10,
+            color: 'var(--text-muted)', letterSpacing: '.1em',
+            fontWeight: 600, textTransform: 'uppercase',
+          }}>
+            {challenge.artifact.label}
+          </span>
+        )}
         {renderArtifact()}
       </div>
 

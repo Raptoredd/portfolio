@@ -1,3 +1,0 @@
-Asset CTF à venir — Strings Don't Lie (CTI-1)
-Remplacer ce fichier par le binaire ELF : chall_strings (sans extension)
-Le binaire doit contenir FLAG{r3v3rs3_str1ngs_4r3_fun} dans ses chaînes.

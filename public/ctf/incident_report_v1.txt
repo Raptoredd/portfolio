@@ -1,3 +1,0 @@
-Asset CTF à venir — IOC Hunt (CTI-3)
-Remplacer ce fichier par : incident_report_v1.pdf
-Le rapport doit contenir des IOC menant au groupe FLAG{APT-VERTEX-GHOST}.

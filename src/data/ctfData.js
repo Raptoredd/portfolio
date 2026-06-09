@@ -54,15 +54,13 @@ export const CTF_CHALLENGES = [
       value: 'a941a4c4fd0c01cddef61b8be963bf4c1e2b0811c037ce3f1835fddf6ef6c223',
       label: 'Hash à cracker',
     },
-    // SHA-256 de FLAG{sunshine} — NE PAS MODIFIER
+    // flagHash — NE PAS MODIFIER
     flagHash: '616f10216cb7230228a5229d26221ee28f421df3f29c5fa4ef7d4eaa0df9c6a9',
     hint: {
       icon: 'Zap',
-      text: 'Hashcat & John the Ripper',
+      text: 'Les mots de passe faibles ont une courte espérance de vie.',
       url: 'https://hashcat.net/wiki/doku.php?id=hashcat',
-      tooltip:
-        'Hashcat (-m 1400 pour SHA-256) ou John the Ripper avec la wordlist rockyou.txt. ' +
-        'Exemple : hashcat -m 1400 -a 0 hash.txt rockyou.txt',
+      tooltip: 'SHA-256 est un algorithme de hachage rapide — trop rapide pour protéger un mot de passe.',
     },
     solution: {
       flag: 'FLAG{sunshine}',
@@ -82,43 +80,31 @@ export const CTF_CHALLENGES = [
 
   {
     id: 'pentest-2',
+    title: 'VisionCorp CCTV',
     category: 'pentest',
-    title: "Headers Don't Lie",
     difficulty: 'medium',
-    description:
-      'Un endpoint interne expose des informations dans ses headers HTTP. ' +
-      'Le développeur a oublié de les nettoyer avant la mise en production. ' +
-      'Les outils parlent, encore faut-il savoir écouter.',
-    tags: ['HTTP headers', 'DevTools', 'curl'],
-    artifact: {
-      type: 'headers',
-      label: 'Endpoint — GET /api/status',
-    },
-    // SHA-256 de FLAG{h34d3rs_4r3_s1l3nt_w1tn3ss3s} — NE PAS MODIFIER
-    flagHash: '8a4546d13cc4fa46d83ed878b02db908bb571acfbffb252deaf85618417e5f05',
-    hint: {
-      icon: 'Globe',
-      text: 'HTTP Headers — MDN',
-      url: 'https://developer.mozilla.org/fr/docs/Web/HTTP/Headers',
-      tooltip:
-        "Les headers HTTP contiennent parfois plus que ce qu'on croit. " +
-        "curl -I ou les DevTools Network sont tes meilleurs alliés. " +
-        "Cherche un header inhabituel dans la réponse de /api/status.",
-    },
+    points: 200,
+    description: "Un système de vidéosurveillance interne tourne sur une app web. Tu as obtenu des credentials guest. Quelque chose dans ta session mérite d'être inspecté de plus près.",
+    tags: ['JWT', 'hashcat', 'session', 'authentification'],
+    hints: [
+      "Les sessions web modernes ne sont pas toujours opaques.",
+      "Un secret prévisible ne reste pas secret longtemps.",
+    ],
     solution: {
-      flag: 'FLAG{h34d3rs_4r3_s1l3nt_w1tn3ss3s}',
       steps: [
-        "Cliquer sur 'ENVOYER LA REQUÊTE' dans le terminal intégré à la carte — simule un GET /api/status",
-        "La réponse JSON apparaît : { \"status\": \"ok\", \"version\": \"2.3.1\", \"env\": \"production\" }",
-        "Cliquer sur 'VOIR LES HEADERS BRUTS' pour afficher la réponse HTTP complète",
-        "Parcourir les headers — repérer le header non-standard : X-Debug-Flag: FLAG{h34d3rs_4r3_s1l3nt_w1tn3ss3s}",
-        "En conditions réelles, utiliser : $ curl -I https://target/api/status",
-        "Ou inspecter l'onglet Network des DevTools → clic sur la requête → onglet Headers",
-        "Ou intercepter la réponse avec Burp Suite Proxy → onglet Response → Raw",
+        "Se connecter avec guest / guest123 — un token JWT est stocké dans localStorage",
+        "DevTools → Application → Local Storage → http://localhost:5173 → copier la valeur de 'visioncorp_token'",
+        "Coller le token dans le champ Encoded sur jwt.io — observer le payload : {\"role\": \"guest\"}",
+        "Cracker le secret : hashcat -a 0 -m 16500 <token> rockyou.txt → secret : superman",
+        "Sur jwt.io : modifier \"role\": \"guest\" → \"role\": \"admin\" dans le payload (colonne droite), entrer superman dans le champ Verify Signature (bas droite, 'secret base64 encoded' décoché), copier le token mis à jour dans le champ Encoded (colonne gauche)",
+        "Retourner sur /visioncorp, coller le token forgé dans le champ 'Coller un token JWT', cliquer 'SE CONNECTER AVEC TOKEN' → accès admin → Live View → flag affiché",
       ],
-      tools: ['curl -I', 'DevTools Network (F12)', 'Burp Suite Proxy'],
-      notes: "Les headers de debug (X-Debug-*, X-Internal-*, X-Build-Version...) sont régulièrement oubliés lors du passage en production. Référence : CWE-200 — Exposition d'informations sensibles à un acteur non autorisé.",
+      tools: ['hashcat', 'jwt.io', 'DevTools'],
+      flag: 'FLAG{w34k_s3cr3t_c4m3r4_0wn3d}',
     },
+    component: 'VisionCorpCCTV',
+    // flagHash — NE PAS MODIFIER
+    flagHash: '0992e9847a461a297087210f9ecfd6c42e54d139f5d328a269b1ca5c22dd392b',
   },
 
   {
@@ -129,23 +115,19 @@ export const CTF_CHALLENGES = [
     description:
       "Un vieux panneau d'administration de Vertex Studio est resté en ligne. " +
       "La base de données des employés est protégée par un login. " +
-      "Mais le développeur en charge était pressé ce vendredi soir-là. " +
-      'Niveau 1 : passe le login. Niveau 2 : lis ce que le serveur te retourne.',
+      "Le développeur en charge était pressé ce vendredi soir-là.",
     tags: ['SQL injection', 'bypass', 'base64', 'JWT'],
     artifact: {
       type: 'form',
       label: 'Panneau admin — Vertex Studio v0.3',
     },
-    // SHA-256 de FLAG{sql1_byw4ss3d_4nd_d3c0d3d} — NE PAS MODIFIER
+    // flagHash — NE PAS MODIFIER
     flagHash: '359493bed74485eeaf42f4da442aab31a1ee105baf50908e9c5b0ae82e58544c',
     hint: {
       icon: 'Database',
-      text: "Comprendre l'injection SQL",
+      text: "Injection SQL",
       url: 'https://portswigger.net/web-security/sql-injection',
-      tooltip:
-        "Une injection SQL exploite la concaténation dans une requête. " +
-        "Payload classique : ' OR '1'='1. " +
-        "Après authentification, lis attentivement ce que le \"serveur\" te retourne.",
+      tooltip: "Une injection SQL exploite la concaténation dans une requête.",
     },
     dbConfig: {
       users: [
@@ -153,36 +135,28 @@ export const CTF_CHALLENGES = [
         { username: 'jdupont', password: 'Jean2024'      },
         { username: 'mleroy',  password: 'Agence123'     },
       ],
-      sqliPatterns: [
-        /'\s*OR\s*'1'\s*=\s*'1/i,
-        /'\s*OR\s*1\s*=\s*1/i,
-        /admin'\s*--/i,
-        /'\s*--/i,
-        /'\s*#/i,
-        /1=1/i,
-      ],
-      // NE PAS MODIFIER
-      fakeSessionToken:
-        'eyJ1c2VyIjogImFkbWluIiwgInJvbGUiOiAic3VwZXJhZG1pbiIsICJmbGFnIjogIkZMQUd7c3FsMV9ieXc0c3MzZF80bmRfZDNjMGQzZH0ifQ==',
-      level1Message:
-        'Accès accordé. Session token : eyJ1c2VyIjogImFkbWluIiwgInJvbGUiOiAic3VwZXJhZG1pbiIsICJmbGFnIjogIkZMQUd7c3FsMV9ieXc0c3MzZF80bmRfZDNjMGQzZH0ifQ==\n\nIndice : ce token est encodé. Lis-le.',
-      flagPlaintext: 'FLAG{sql1_byw4ss3d_4nd_d3c0d3d}',
+      sqliBypass: "admin'--",
+      fakeSessionToken: 'eyJ1c2VyIjogImFkbWluIiwgImxldmVsIjogMiwgInNlc3Npb24iOiAidmVydGV4X2ludGVybmFsIiwgInJlZGlyZWN0IjogIi92ZXJ0ZXgtYWRtaW4/dG9rZW49Y2Q4Zjg2N2EtMTY2Mi00ZGVhLWExNGMtMTAzZjcyMTY1OTc1In0=',
+      sessionUUID: 'cd8f867a-1662-4dea-a14c-103f72165975',
+      level1Message: 'Accès accordé. Session token :\n\neyJ1c2VyIjogImFkbWluIiwgImxldmVsIjogMiwgInNlc3Npb24iOiAidmVydGV4X2ludGVybmFsIiwgInJlZGlyZWN0IjogIi92ZXJ0ZXgtYWRtaW4/dG9rZW49Y2Q4Zjg2N2EtMTY2Mi00ZGVhLWExNGMtMTAzZjcyMTY1OTc1In0=',
       failMessage: '[403] Identifiants incorrects.',
+      wafMessage: '[BLOCKED] WAF Signature: suspicious pattern detected.',
     },
     solution: {
       flag: 'FLAG{sql1_byw4ss3d_4nd_d3c0d3d}',
       steps: [
-        "Accéder au panneau admin via le lien dans la carte du challenge : /vertex-admin",
-        "Tenter les credentials par défaut — accès accordé mais sans flag (authentification légitime non pertinente)",
-        "Niveau 1 — Injecter un payload SQLi classique dans le champ username : ' OR '1'='1",
-        "Le formulaire retourne un session token base64 et le message 'Accès accordé'",
-        "Plusieurs autres payloads fonctionnent : admin'--, '--, '#, 1=1",
-        "Niveau 2 — Décoder le token en base64 :",
-        "  Console navigateur : atob('eyJ1c2VyIjogImFkbWluIi...')",
-        "  Ou sur base64decode.org",
-        "Le JSON décodé contient un champ 'flag' — c'est le flag du challenge",
+        "Accéder à /vertex-admin via le lien dans la carte du challenge",
+        "Tenter les payloads SQLi courants — tous bloqués par le WAF avec message explicite",
+        "Trouver le payload qui bypass le WAF : admin'-- dans le champ identifiant (mot de passe vide)",
+        "Récupérer le token base64 retourné dans le SYSTEM OUTPUT",
+        "Décoder le token : atob('<token>') dans la console navigateur ou sur base64decode.org",
+        "Lire le champ 'redirect' dans le JSON décodé : /vertex-admin?token=cd8f867a-1662-4dea-a14c-103f72165975",
+        "Naviguer vers cette URL — accès au niveau 2 : interface de gestion des comptes cloud Vertex Studio",
+        "Repérer le compte OWNER (V. Studio) mis en évidence en amber",
+        "Cliquer Reset mot de passe sur le compte OWNER → confirmer dans la modale",
+        "Lire le faux email de réinitialisation affiché — le flag est dans le champ 'Token de récupération'",
       ],
-      tools: ['navigateur (DevTools)', 'base64decode.org', 'console JS (atob())', 'Burp Suite'],
+      tools: ['navigateur (DevTools)', 'base64decode.org ou console JS (atob())'],
       notes: "Le token retourné est du JSON encodé en base64 pur — pas un JWT signé (pas de signature HMAC). En conditions réelles, tout payload contournant la concaténation SQL donne le même résultat. Payloads reconnus ici : OR bypass, commentaires SQL (-- et #), et la condition 1=1.",
     },
   },
@@ -197,25 +171,21 @@ export const CTF_CHALLENGES = [
     title: 'Who Am I?',
     difficulty: 'easy',
     description:
-      'Une photo anodine prise dans le jardin du Directeur Général de Vertex Studio. ' +
-      'Une simple boîte d\'allumettes dans son jardin. ' +
-      'Mais les métadonnées, elles, ne mentent jamais.',
+      "Une photo anodine prise lors d'une réunion interne de Vertex Studio. " +
+      "Les images en disent parfois plus qu'on ne le croit.",
     tags: ['EXIF', 'metadata', 'exiftool'],
     artifact: {
       type: 'image',
       src: '/ctf/osint1.jpg',
       label: 'Photo — Vertex Studio Meeting #4',
     },
-    // SHA-256 de FLAG{3x1f_m3t4d4t4_n3v3r_l13s} — NE PAS MODIFIER
+    // flagHash — NE PAS MODIFIER
     flagHash: 'bdaa3a8de135c5d96bf3b600196137385461d4b5f726f2270ef4179f904f033e',
     hint: {
       icon: 'Camera',
-      text: 'Métadonnées EXIF — ExifTool',
+      text: "Les images embarquent parfois plus que ce que l'on voit.",
       url: 'https://exiftool.org/',
-      tooltip:
-        'Les fichiers JPEG embarquent des métadonnées EXIF : GPS, appareil, auteur, commentaires. ' +
-        "Utilise ExifTool (CLI) ou Jeffrey's Exif Viewer (web). " +
-        'Exemple : exiftool osint1.jpg | grep -i comment',
+      tooltip: "Un fichier image contient des données invisibles à l'œil nu.",
     },
     solution: {
       flag: 'FLAG{3x1f_m3t4d4t4_n3v3r_l13s}',
@@ -240,36 +210,31 @@ export const CTF_CHALLENGES = [
     difficulty: 'medium',
     description:
       'Le site a été mis à jour. Certaines pages ont disparu. ' +
-      "Mais Internet n'oublie jamais vraiment. " +
-      'Il existe des sites mystères permettant de voyager dans le temps… 🕳',
-    tags: ['Wayback Machine', 'web archive', 'robots.txt'],
+      "Mais Internet n'oublie jamais vraiment.",
+    tags: ['Wayback Machine', 'web archive', 'reconnaissance'],
     artifact: {
       type: 'text',
-      value: 'Indice : consulte le fichier robots.txt de ce site.',
-      label: 'Point de départ',
+      value: 'benjaminbayle.tech',
+      label: 'Cible',
     },
-    // SHA-256 de FLAG{w4yb4ck_s3cr3t_p4g3} — NE PAS MODIFIER
+    // flagHash — NE PAS MODIFIER
     flagHash: '9b22ce43a0add4715e0f5ab1031f7c1d0aac6e41215fbb09ec6de0065027d43b',
     hint: {
       icon: 'Clock',
-      text: 'Voyager dans le temps sur le web',
+      text: "Internet n'oublie jamais.",
       url: 'https://web.archive.org',
-      tooltip:
-        'La Wayback Machine archive des milliards de pages. ' +
-        "Une page supprimée n'est pas forcément perdue. " +
-        '💡 Les robots.txt sont aussi archivés — et parfois révélateurs.',
+      tooltip: "Certaines pages supprimées restent accessibles. La reconnaissance de base révèle parfois des chemins inattendus.",
     },
     solution: {
       flag: 'FLAG{w4yb4ck_s3cr3t_p4g3}',
       steps: [
-        "Consulter le fichier robots.txt du portfolio : https://benjaminbayle.tech/robots.txt",
-        "Repérer la directive Disallow: /old/ — chemin volontairement exclu du crawl",
-        "Construire l'URL de la page cachée : https://benjaminbayle.tech/old/secret.html",
-        "La page retourne 404 en direct — elle a été supprimée du site actuel",
+        "Effectuer une reconnaissance de base sur le site : consulter robots.txt → https://benjaminbayle.tech/robots.txt",
+        "Repérer la directive Disallow: /old/secret.html — chemin exposé involontairement",
+        "Tenter l'URL : https://benjaminbayle.tech/old/secret.html → retourne 404 (page supprimée)",
         "Rechercher l'URL sur la Wayback Machine : https://web.archive.org",
         "Ouvrir l'archive disponible — le flag est affiché en clair dans la page archivée",
       ],
-      tools: ['web.archive.org', 'curl (pour lire robots.txt)', 'Wayback Machine CDX API'],
+      tools: ['web.archive.org', 'curl'],
       notes: "robots.txt n'est pas un mécanisme de sécurité — il est public et indexé. Les directives Disallow sont des mines d'or en OSINT : chemins d'admin, pages de staging, répertoires sensibles. L'API CDX de la Wayback Machine permet d'automatiser la recherche d'archives.",
     },
   },
@@ -289,7 +254,7 @@ export const CTF_CHALLENGES = [
       value: 'REPO_GITHUB_URL_A_RENSEIGNER',
       label: 'Repo GitHub du portfolio',
     },
-    // SHA-256 de FLAG{g1t_n3v3r_f0rg3ts} — NE PAS MODIFIER
+    // flagHash — NE PAS MODIFIER
     flagHash: '94e896c712e78af13d288db59e2c4492cc72df5d89f1faeee2fe45f911c7f4e7',
     hint: {
       icon: 'GitCommit',
@@ -340,16 +305,13 @@ export const CTF_CHALLENGES = [
       label: 'Télécharger le binaire (ELF x86-64, ~15 Ko)',
       mimeType: 'application/octet-stream',
     },
-    // SHA-256 de FLAG{r3v3rs3_str1ngs_4r3_fun} — NE PAS MODIFIER
+    // flagHash — NE PAS MODIFIER
     flagHash: '5a04980d9c30814c2f9b9a77b1ca76d628c86dcaf24a9deedbea5b738cbccf86',
     hint: {
       icon: 'Code2',
-      text: 'Ghidra — Décompilateur (NSA)',
+      text: "Les binaires parlent, à qui sait écouter.",
       url: 'https://ghidra-sre.org/',
-      tooltip:
-        'Ghidra est un outil de reverse engineering open-source publié par la NSA. ' +
-        'Avant Ghidra : essaie strings ./chall_strings | grep FLAG ' +
-        "— parfois c'est suffisant. Cherche bien, il y a du bruit.",
+      tooltip: "L'analyse statique d'un binaire ne nécessite pas toujours un décompilateur.",
     },
     solution: {
       flag: 'FLAG{r3v3rs3_str1ngs_4r3_fun}',
@@ -374,10 +336,9 @@ export const CTF_CHALLENGES = [
     title: 'Dropper Anatomy',
     difficulty: 'hard',
     description:
-      'Un script Python suspect a été intercepté sur un poste Vertex Studio. ' +
-      'Obfusqué, avec des appels LOLbin et une tentative de récupération ' +
-      "d'une ressource distante. Analyse statique uniquement. " +
-      'Le flag est dans le code — mais il te faudra une clé pour le lire.',
+      'Un exécutable suspect a été intercepté sur un poste Vertex Studio. ' +
+      'Obfusqué. Analyse statique uniquement. ' +
+      'Le flag est dans le code — mais il te faudra trouver comment le lire.',
     tags: ['malware statique', 'obfuscation', 'Python', 'base64', 'LOLbin'],
     artifact: {
       type: 'download',
@@ -385,36 +346,32 @@ export const CTF_CHALLENGES = [
       label: 'Télécharger dropper_sample.exe (PyInstaller, Windows)',
       warning: '⚠️ Sample éducatif — aucun payload réel, aucune exécution nécessaire',
     },
-    // SHA-256 de FLAG{dr0pp3r_4n4t0my_d3c0d3d} — NE PAS MODIFIER
+    // flagHash — NE PAS MODIFIER
     flagHash: '12f71135276f0bd6f85f0479555e27b9cfc7fd5fcd1469eaa665014799c129e1',
     hint: {
       icon: 'Bug',
-      text: 'Déobfuscation Python & outils',
-      url: 'https://github.com/pycdc/pycdc',
-      tooltip:
-        "Méthode : 1) Lire sans exécuter. 2) Identifier les couches (base64, XOR). " +
-        "3) Substituer eval()/exec() par print(). " +
-        "4) Le flag est en deux parties — une dans le script, une sur /C2 de ce site.",
+      text: "Déobfuscation Python",
+      url: 'https://github.com/extremecoders-re/pyinstxtractor',
+      tooltip: "Un exécutable PyInstaller embarque du bytecode Python extractible.",
     },
     dropperConfig: {
       xorKey: 'V3RT3X',
       encryptedFlagHex: 'PLACEHOLDER_XOR_HEX',
-      flagPlaintext: 'FLAG{dr0pp3r_4n4t0my_d3c0d3d}',
     },
     solution: {
       flag: 'FLAG{dr0pp3r_4n4t0my_d3c0d3d}',
       steps: [
-        "Télécharger dropper_sample.exe — c'est un binaire compilé avec PyInstaller",
+        "Télécharger dropper_sample.exe — binaire compilé avec PyInstaller",
         "Extraire le bytecode Python embarqué : $ python pyinstxtractor.py dropper_sample.exe",
         "Décompiler le .pyc obtenu avec pycdc ou uncompyle6 pour retrouver le source Python",
-        "Analyser le code reconstruit : repérer un blob de données hexadécimales obfusqué (variable chiffrée XOR)",
-        "Repérer une requête HTTP vers une URL distante contenant '/C2' — l'endpoint de récupération de clé",
-        "Naviguer vers /C2 sur ce portfolio — la page affiche en clair la clé de déchiffrement : V3RT3X",
-        "Déchiffrer le blob avec XOR cyclique (clé V3RT3X) :",
+        "Analyser le code reconstruit : repérer un blob hexadécimal chiffré et une clé de déchiffrement",
+        "Repérer une requête HTTP vers une URL distante contenant '/C2' — endpoint de récupération de clé",
+        "Naviguer vers /C2 sur ce portfolio — la page affiche la clé de déchiffrement",
+        "Déchiffrer le blob avec XOR cyclique (clé récupérée sur /C2) :",
         "  $ python3 -c \"key='V3RT3X'; enc=bytes.fromhex('BLOB_HEX'); print(''.join(chr(b ^ ord(key[i % len(key)])) for i, b in enumerate(enc)))\"",
         "Le contenu déchiffré révèle le flag du challenge",
       ],
-      tools: ['éditeur de texte (VSCode, Notepad++)', 'python3 REPL', 'navigateur (page /C2)'],
+      tools: ['pyinstxtractor', 'pycdc ou uncompyle6', 'python3 REPL', 'navigateur (page /C2)'],
       notes: "Le XOR avec clé cyclique est une technique d'obfuscation simple et très répandue dans les droppers réels. La récupération de clé depuis /C2 simule le comportement d'un malware en deux temps : dropper (obfusqué, livré à la victime) + serveur C2 (délivre la clé au runtime). Substituer eval() par print() est la première réflexe face à du code Python obfusqué.",
     },
   },

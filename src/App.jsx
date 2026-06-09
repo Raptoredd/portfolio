@@ -12,12 +12,13 @@ import CTF from './pages/CTF'
 import CTFSolutions from './pages/CTFSolutions'
 import C2Page from './pages/C2Page'
 import VertexAdmin from './pages/VertexAdmin'
+import VisionCorpPage from './pages/VisionCorpPage'
 import Homelab from './pages/Homelab'
 import Contact from './pages/Contact'
 
 export default function App() {
   const location = useLocation()
-  const isStandalone = ['/vertex-admin', '/C2', '/ctf/solutions'].includes(location.pathname)
+  const isStandalone = ['/vertex-admin', '/visioncorp', '/C2', '/ctf/solutions'].includes(location.pathname)
 
   return (
     <>
@@ -44,6 +45,7 @@ export default function App() {
           } />
           <Route path="/C2" element={<C2Page />} />
           <Route path="/vertex-admin" element={<VertexAdmin />} />
+          <Route path="/visioncorp" element={<VisionCorpPage />} />
           <Route path="/homelab" element={
             <PageTransition><Homelab /></PageTransition>
           } />

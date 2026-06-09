@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: /old/
+Disallow: /old/secret.html
 Disallow: /api/files
 # Nothing to see here.
